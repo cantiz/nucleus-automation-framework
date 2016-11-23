@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.attinad.automation</groupId>
-  <artifactId>Utility</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <artifactId>cantiz-automation-core</artifactId>
+  <version>1.0</version>
   <packaging>jar</packaging>
 
-  <name>Utility</name>
+  <name>cantiz-automation-core</name>
   <url>http://maven.apache.org</url>
 
   <properties>
