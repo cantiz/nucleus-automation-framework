@@ -17,60 +17,58 @@ public class PropertyReader {
 	private String userName;
 	private String userPassword;
 	private String browser;
-    private String url;
-    private String subscription;
-    private String os;
-    private static String operatingSystem;
-    
-    public String currentdate;
-    public String afterdate;
-    private String beforedate;
-    
+	private String url;
+	private String subscription;
+	private String os;
+	private static String operatingSystem;
 
-    public String getAccountName() {
-        return accountName;
-    }
+	public String currentdate;
+	public String afterdate;
+	private String beforedate;
 
-    public String getUserName() {
-        return userName;
-    }
+	public String getAccountName() {
+		return accountName;
+	}
 
-    public String getUserPassword() {
-        return userPassword;
-    }
+	public String getUserName() {
+		return userName;
+	}
 
-    public String getBrowser() {
-        return browser;
-    }
+	public String getUserPassword() {
+		return userPassword;
+	}
 
-    public String getUrl() {
-        return url;
-    }
+	public String getBrowser() {
+		return browser;
+	}
 
-    public String getSubscription() {
-        return subscription;
-    }
+	public String getUrl() {
+		return url;
+	}
 
-    public String getOs() {
-        return os;
-    }
+	public String getSubscription() {
+		return subscription;
+	}
 
-	private PropertyReader(){
+	public String getOs() {
+		return os;
+	}
+
+	private PropertyReader() {
 		Properties prop = initializeProperties();
 		setLoginCredentials(prop);
-	}	
+	}
 
-	public static PropertyReader getInstance(){
-		if(propertyReader == null){
+	public static PropertyReader getInstance() {
+		if (propertyReader == null) {
 			propertyReader = new PropertyReader();
 		}
 		return propertyReader;
 	}
-	
 
 	private Properties initializeProperties() {
-        Properties prop = new Properties();
-        InputStream input = null;
+		Properties prop = new Properties();
+		InputStream input = null;
 		try {
 			input = new FileInputStream("config.properties");
 			// load a properties file
@@ -87,7 +85,7 @@ public class PropertyReader {
 				}
 			}
 		} // end of finally
-        return prop;
+		return prop;
 
 	}// end of initializeProperties fn
 
@@ -98,15 +96,16 @@ public class PropertyReader {
 
 		browser = prop.getProperty("browser");
 		url = prop.getProperty("url");
-		//We are not reading OS value from config file
-		//instead we are reading from system properties os = prop.getProperty("os");
+		// We are not reading OS value from config file
+		// instead we are reading from system properties os =
+		// prop.getProperty("os");
 		os = getOperatingSystem();
-		
+
 	}
 
 	private String getOperatingSystem() {
 		operatingSystem = System.getProperty("os.name").toLowerCase();
-		
+
 		if (isWindows()) {
 			System.out.println("This is Windows");
 			return "win";
@@ -123,14 +122,13 @@ public class PropertyReader {
 			System.out.println("Your OS is not support!!");
 			return null;
 		}
-		
-		
+
 	}
 
 	private void setSubscription(Properties prop) {
 		subscription = prop.getProperty("gully");
 	}
-	
+
 	public static boolean isWindows() {
 		return (operatingSystem.indexOf("win") >= 0);
 	}
@@ -140,24 +138,24 @@ public class PropertyReader {
 	}
 
 	public static boolean isUnix() {
-		return (operatingSystem.indexOf("nix") >= 0 || operatingSystem.indexOf("nux") >= 0 || operatingSystem.indexOf("aix") > 0 );
+		return (operatingSystem.indexOf("nix") >= 0 || operatingSystem.indexOf("nux") >= 0
+				|| operatingSystem.indexOf("aix") > 0);
 	}
 
 	public static boolean isSolaris() {
 		return (operatingSystem.indexOf("sunoperatingSystem") >= 0);
 	}
-	
+
 	public void timemanage() {
 
-		   DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		   Date date = new Date();
-		   Calendar cal = Calendar.getInstance();
-   		   currentdate = dateFormat.format(cal.getTime());
-		   cal.add(Calendar.DATE, -7);   
-		   beforedate = dateFormat.format(cal.getTime());
-		   cal.add(Calendar.DATE, +7);
-		   afterdate = dateFormat.format(cal.getTime());
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		Calendar cal = Calendar.getInstance();
+		currentdate = dateFormat.format(cal.getTime());
+		cal.add(Calendar.DATE, -7);
+		beforedate = dateFormat.format(cal.getTime());
+		cal.add(Calendar.DATE, +7);
+		afterdate = dateFormat.format(cal.getTime());
 
-
-	 }
+	}
 }
