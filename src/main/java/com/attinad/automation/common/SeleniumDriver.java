@@ -1,14 +1,18 @@
 package com.attinad.automation.common;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import com.attinad.automation.utils.CantizAutomationCoreException;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import com.attinad.automation.common.Locators;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 public class SeleniumDriver implements ICantizWebDriver {
@@ -16,13 +20,19 @@ public class SeleniumDriver implements ICantizWebDriver {
 	private PropertyReader propReader = null;
 	private WebDriver driver = null;
 
-	public SeleniumDriver(PropertyReader propReader) {
+	public SeleniumDriver(PropertyReader propReader) throws CantizAutomationCoreException {
 		this.propReader = propReader;
-		initializeDriver();
+		if(propReader.getDriverType().equalsIgnoreCase("remote")){
+			initializeRemoteDriver();
+		}else{
+			initializeDriver();
+		}
+		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+		driver.get(this.propReader.getUrl());
+		driver.manage().window().maximize();
 	}
 
 	public void initializeDriver() {
-
 		if (this.propReader.getBrowser().equalsIgnoreCase("Chrome")) {
 			String osName = System.getProperty("os.name");
 			if (osName.startsWith("Windows")) {
@@ -40,9 +50,28 @@ public class SeleniumDriver implements ICantizWebDriver {
 			}
 			driver = new ChromeDriver();
 		}
-		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-		driver.get(this.propReader.getUrl());
-		driver.manage().window().maximize();
+	}
+
+	private void initializeRemoteDriver() throws CantizAutomationCoreException {
+		DesiredCapabilities capabilities = new DesiredCapabilities();
+		String browser = (System.getProperty("browserName") != null)? System.getProperty("browserName"):propReader.getBrowser();
+		capabilities.setBrowserName(browser);
+		capabilities.setPlatform(resolvePlatfrom());
+		try {
+			driver = new RemoteWebDriver(new URL(propReader.getRemoteUrl()),capabilities);
+		} catch (MalformedURLException e) {
+			throw new CantizAutomationCoreException("Remote URL provided is invalid.");
+		}
+	}
+
+	private Platform resolvePlatfrom(){
+		String osName = (System.getProperty("target-os") != null)? System.getProperty("target-os"):propReader.getOs();
+		switch (osName){
+			case "MAC":
+				return Platform.MAC;
+			default:
+				return Platform.WINDOWS;
+		}
 	}
 
 	private WebElement findElement(Locators locator, String locatorValue) {
@@ -124,38 +153,16 @@ public class SeleniumDriver implements ICantizWebDriver {
 	}
 
 	@Override
-	public Boolean checkValueInsideText(String valueToCheck, String divCategory) {
-
+	public Boolean checkValueInsideText(String valueToCheck, String elementId){
 		WebElement divElement = null;
-		String wholeText = "";
-		Boolean returner = null;
-
-		switch (divCategory) {
-		case "Response":
-			// Corresponding Div Category is "show_response_info_id"
-			divElement = driver.findElement(By.id("show_response_info_id"));
-			wholeText = divElement.getText();
-			if (wholeText.contains(valueToCheck)) {
-				returner = true;
-			} else {
-				returner = false;
-			}
-			break;
-
-		case "Error":
-			divElement = driver.findElement(By.id("error_input_parameters_id"));
-			wholeText = divElement.getText();
-			if (wholeText.contains(valueToCheck)) {
-				returner = true;
-			} else {
-				returner = false;
-			}
-			break;
-
-		default:
+		String wholeText;
+		divElement = driver.findElement(By.id(elementId));
+		wholeText = divElement.getText();
+		if (wholeText.contains(valueToCheck)) {
+			return true;
+		} else {
+			return false;
 		}
-		return returner;
-
 	}
 
 	/*
