@@ -54,8 +54,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 
 	private void initializeRemoteDriver() throws CantizAutomationCoreException {
 		DesiredCapabilities capabilities = new DesiredCapabilities();
-		String browser = (System.getProperty("browserName") != null)? System.getProperty("browserName"):propReader.getBrowser();
-		capabilities.setBrowserName(browser);
+		capabilities.setBrowserName(propReader.getBrowser());
 		capabilities.setPlatform(resolvePlatfrom());
 		try {
 			driver = new RemoteWebDriver(new URL(propReader.getRemoteUrl()),capabilities);
@@ -65,7 +64,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 	}
 
 	private Platform resolvePlatfrom(){
-		String osName = (System.getProperty("target-os") != null)? System.getProperty("target-os"):propReader.getOs();
+		String osName = propReader.getOs();
 		switch (osName){
 			case "MAC":
 				return Platform.MAC;

@@ -1,5 +1,7 @@
 package com.attinad.automation.common;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -84,11 +86,12 @@ public class PropertyReader {
     }// end of initializeProperties fn
 
     private void setLoginCredentials(Properties prop) {
-        browser = prop.getProperty("target-browser");
-        url = prop.getProperty("url");
-        driverType = prop.getProperty("web-driver-type");
-        remoteUrl = prop.getProperty("web-driver-url");
-        os = (prop.getProperty("target-os") != null)? prop.getProperty("target-os") : getOperatingSystem();
+        browser = (!StringUtils.isEmpty(System.getProperty("target-browser")))? System.getProperty("target-browser"):prop.getProperty("target-browser");
+        url = (!StringUtils.isEmpty(System.getProperty("target-url")))? System.getProperty("target-url"):prop.getProperty("target-url");
+        driverType = (!StringUtils.isEmpty(System.getProperty("web-driver-type")))? System.getProperty("web-driver-type"):prop.getProperty("web-driver-type");
+        remoteUrl = (!StringUtils.isEmpty(System.getProperty("web-driver-url")))? System.getProperty("web-driver-url"):prop.getProperty("web-driver-url");
+        String osFromProperty =  (prop.getProperty("target-os") != null)? prop.getProperty("target-os") : getOperatingSystem();
+        os = (!StringUtils.isEmpty(System.getProperty("target-os")))? System.getProperty("target-os"):osFromProperty;
 
     }
 
