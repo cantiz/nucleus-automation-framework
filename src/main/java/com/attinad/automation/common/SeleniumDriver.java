@@ -68,6 +68,8 @@ public class SeleniumDriver implements ICantizWebDriver {
 		switch (osName){
 			case "MAC":
 				return Platform.MAC;
+			case "LINUX":
+				return Platform.LINUX;
 			default:
 				return Platform.WINDOWS;
 		}
