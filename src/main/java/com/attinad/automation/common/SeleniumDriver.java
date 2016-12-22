@@ -70,8 +70,10 @@ public class SeleniumDriver implements ICantizWebDriver {
 				return Platform.MAC;
 			case "LINUX":
 				return Platform.LINUX;
-			default:
+			case "WINDOWS":
 				return Platform.WINDOWS;
+			default:
+				return Platform.MAVERICKS;
 		}
 	}
 
