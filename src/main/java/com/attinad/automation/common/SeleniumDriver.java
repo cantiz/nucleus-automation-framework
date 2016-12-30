@@ -3,9 +3,12 @@ package com.attinad.automation.common;
 import com.attinad.automation.utils.CantizAutomationCoreException;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -31,7 +34,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 		driver.get(this.propReader.getUrl());
 		driver.manage().window().maximize();
 	}
-
+ 
 	public void initializeDriver() {
 		if (this.propReader.getBrowser().equalsIgnoreCase("Chrome")) {
 			String osName = System.getProperty("os.name");
@@ -44,11 +47,16 @@ public class SeleniumDriver implements ICantizWebDriver {
 		} else if (this.propReader.getBrowser().equalsIgnoreCase("ie")) {
 			String osName = System.getProperty("os.name");
 			if (osName.startsWith("Windows")) {
-				System.setProperty("webdriver.chrome.driver", "./drivers/chromedriver.exe");
+				System.setProperty("webdriver.ie.driver", "./drivers/internetexplorer/32bit/IEDriverServer.exe");
 			} else {
-				System.setProperty("webdriver.chrome.driver", "./drivers/chromedriver");
+				System.setProperty("webdriver.ie.driver", "./drivers/internetexplorer/IEDriverServer.exe");
 			}
-			driver = new ChromeDriver();
+			driver = new InternetExplorerDriver();
+		}else if (this.propReader.getBrowser().equalsIgnoreCase("firefox")) {
+			driver = new FirefoxDriver();
+		}
+		else if (this.propReader.getBrowser().equalsIgnoreCase("safari")){
+			driver = new SafariDriver();
 		}
 	}
 
@@ -121,6 +129,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 	@Override
 	public void sendKeyStrokes(Locators locator, String locatorValue, String keyStrokes) {
 		findElement(locator, locatorValue).sendKeys(keyStrokes);
+
 	}
 
 	@Override
