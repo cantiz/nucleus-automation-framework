@@ -15,5 +15,6 @@ public interface ICantizWebDriver {
 	Boolean checkValueInsideText(String valueToCheck, String divCategory);
 
 	void closeDriver();
+
 	
 }
