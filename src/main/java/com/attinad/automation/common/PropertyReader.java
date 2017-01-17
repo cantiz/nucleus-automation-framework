@@ -20,7 +20,53 @@ public class PropertyReader {
     private String driverType;
     private String remoteUrl;
     private String operatingSystem;
+    
+    public String getMailType() {
+		return mailType;
+	}
 
+	public void setMailType(String mailType) {
+		this.mailType = mailType;
+	}
+
+	public String getMailHost() {
+		return mailHost;
+	}
+
+	public void setMailHost(String mailHost) {
+		this.mailHost = mailHost;
+	}
+
+	public String getMailPort() {
+		return mailPort;
+	}
+
+	public void setMailPort(String mailPort) {
+		this.mailPort = mailPort;
+	}
+
+	public String getMailUserName() {
+		return mailUserName;
+	}
+
+	public void setMailUserName(String mailUserName) {
+		this.mailUserName = mailUserName;
+	}
+
+	public String getMailPassword() {
+		return mailPassword;
+	}
+
+	public void setMailPassword(String mailPassword) {
+		this.mailPassword = mailPassword;
+	}
+
+	private String mailType;
+    private String mailHost;
+    private String mailPort;
+    private String mailUserName;
+    private String mailPassword;
+    
     public String getBrowser() {
         return browser;
     }
@@ -67,7 +113,6 @@ public class PropertyReader {
         InputStream input = null;
         try {
             input = new FileInputStream("config.properties");
-            // load a properties file
             prop.load(input);
 
         } catch (IOException ex) {

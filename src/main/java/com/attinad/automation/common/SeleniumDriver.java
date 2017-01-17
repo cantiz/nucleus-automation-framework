@@ -162,7 +162,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(menuSecondLevelId)));
 		clickAction.moveToElement(findElement(Locators.ID, menuSecondLevelId));
 		clickAction.click().build().perform();
-		;
+		
 	}
 
 	@Override
@@ -194,6 +194,14 @@ public class SeleniumDriver implements ICantizWebDriver {
 		driver.close();
 		driver.quit();
 
+	}
+
+	@Override
+	public Boolean checkElementById(String locatorValue) {
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(locatorValue)));
+		Boolean exists = driver.findElement(By.id(locatorValue)).isDisplayed();
+		return exists;
 	}
 
 }

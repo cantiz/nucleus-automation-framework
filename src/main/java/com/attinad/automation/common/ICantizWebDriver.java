@@ -14,6 +14,7 @@ public interface ICantizWebDriver {
 
 	Boolean checkValueInsideText(String valueToCheck, String divCategory);
 
+	Boolean checkElementById(String locatorValue);
 	void closeDriver();
 
 	
