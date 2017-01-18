@@ -24,6 +24,7 @@ public class MailReader {
 	public static String getMailContent(String host, String port, String storeType, String user, String password) {
 		String result = "";
 		Store store = null;
+		Folder emailFolder = null;
 		try {
 
 			if (storeType.equalsIgnoreCase("smtp")) {
@@ -55,13 +56,14 @@ public class MailReader {
 				store.connect(host, user, password);
 			}
 
-			Folder emailFolder = store.getFolder("INBOX");
+			emailFolder = store.getFolder("INBOX");
 			emailFolder.open(Folder.HOLDS_MESSAGES);
 
 			// retrieve the messages from the folder in an array and print it
 			Message[] messages = emailFolder.getMessages();
 			int msglength = messages.length;
-			if (msglength != 0) {
+			if(msglength == 0)
+				return result;
 				// length - 1 gives the latest message
 				Message message = messages[msglength - 1];
 
@@ -85,38 +87,36 @@ public class MailReader {
 						} else if (bodyPart.isMimeType("text/html")) {
 							String html = (String) bodyPart.getContent();
 							result = result + "\n" + Jsoup.parse(html).text();
-
 						}
 					}
-
 				}
 
-			}
-
-			// close the store and folder objects
-			emailFolder.close(false);
-			store.close();
-
 		} catch (NoSuchProviderException e) {
-			e.printStackTrace();
-		} catch (MessagingException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		finally{
+			if(null != emailFolder && emailFolder.isOpen()){
+				try {
+					emailFolder.close(false);
+				} catch (MessagingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(null != store && store.isConnected()){
+				try {
+					store.close();
+				} catch (MessagingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 		return result;
 	}
 
-	public String getMailContent() {
-
-		String host = this.propReader.getMailHost();
-		String port = this.propReader.getMailPort();
-		String mailStoreType = this.propReader.getMailType();
-		String username = this.propReader.getMailUserName();
-		String password = this.propReader.getMailPassword();
-		return getMailContent(host, port, mailStoreType, username, password);
-
-	}
 
 	public String getMailId() {
 		String mailId = propReader.getMailUserName();

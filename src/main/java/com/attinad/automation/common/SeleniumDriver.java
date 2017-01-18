@@ -2,7 +2,6 @@ package com.attinad.automation.common;
 
 import com.attinad.automation.utils.CantizAutomationCoreException;
 
-import org.apache.poi.util.SystemOutLogger;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
