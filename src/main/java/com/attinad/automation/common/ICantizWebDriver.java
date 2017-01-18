@@ -17,5 +17,9 @@ public interface ICantizWebDriver {
 	Boolean checkElementById(String locatorValue);
 	void closeDriver();
 
+	String getAttributeTypeOfWebElement(Locators id, String idPassword);
+
+	void navigateToPage(String pageURL);
+
 	
 }

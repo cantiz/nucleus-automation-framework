@@ -203,4 +203,18 @@ public class SeleniumDriver implements ICantizWebDriver {
 		return exists;
 	}
 
+	@Override
+	public String getAttributeTypeOfWebElement(Locators id, String locatorvalue) {
+		String attributeType = "";
+		WebElement element = findElement(id,locatorvalue);
+		attributeType = element.getAttribute("type");
+		return attributeType;
+	}
+
+	@Override
+	public void navigateToPage(String pageURL) {
+
+		driver.get(pageURL);
+	}
+
 }
