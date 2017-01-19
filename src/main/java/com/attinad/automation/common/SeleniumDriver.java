@@ -2,6 +2,8 @@ package com.attinad.automation.common;
 
 import com.attinad.automation.utils.CantizAutomationCoreException;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -149,7 +151,6 @@ public class SeleniumDriver implements ICantizWebDriver {
 
 	}
 
-
 	@Override
 	public void selectMenuElement(String menuFirstLevelId, String menuSecondLevelId) {
 		this.clickElement(Locators.ID, "menuButton");
@@ -161,7 +162,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(menuSecondLevelId)));
 		clickAction.moveToElement(findElement(Locators.ID, menuSecondLevelId));
 		clickAction.click().build().perform();
-		
+
 	}
 
 	@Override
@@ -206,7 +207,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 	@Override
 	public String getAttributeTypeOfWebElement(Locators id, String locatorvalue) {
 		String attributeType = "";
-		WebElement element = findElement(id,locatorvalue);
+		WebElement element = findElement(id, locatorvalue);
 		attributeType = element.getAttribute("type");
 		return attributeType;
 	}
@@ -215,6 +216,15 @@ public class SeleniumDriver implements ICantizWebDriver {
 	public void navigateToPage(String pageURL) {
 
 		driver.get(pageURL);
+	}
+
+	@Override
+	public String getHtmlValueById(String htmlContent, String locator) {
+
+		Document doc = Jsoup.parse(htmlContent);
+		String verificationcode = doc.getElementById(locator).html();
+
+		return verificationcode;
 	}
 
 }
