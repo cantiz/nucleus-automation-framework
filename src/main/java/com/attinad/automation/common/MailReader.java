@@ -1,5 +1,6 @@
 package com.attinad.automation.common;
 
+import java.io.IOException;
 import java.util.Properties;
 
 import javax.mail.BodyPart;
@@ -7,11 +8,11 @@ import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
-import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.MimeMultipart;
 
+import com.attinad.automation.utils.CantizAutomationCoreException;
 import org.jsoup.Jsoup;
 
 /**
@@ -19,9 +20,12 @@ import org.jsoup.Jsoup;
  */
 public class MailReader {
 
-	private PropertyReader propReader = null;
+	public static String getMailContent(String user,String password) throws CantizAutomationCoreException {
+		PropertyReader propertyReader = PropertyReader.getInstance();
+		return getMailContent(propertyReader.getMailHost(),propertyReader.getMailPort(),propertyReader.getMailType(),user,password);
+	}
 
-	public static String getMailContent(String host, String port, String storeType, String user, String password) {
+	public static String getMailContent(String host, String port, String storeType, String user, String password) throws CantizAutomationCoreException {
 		String result = "";
 		Store store = null;
 		Folder emailFolder = null;
@@ -90,18 +94,18 @@ public class MailReader {
 						}
 					}
 				}
+			return result;
 
-		} catch (NoSuchProviderException e) {
+		} catch (MessagingException e) {
 			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		finally{
+			throw new CantizAutomationCoreException(e.getMessage());
+		} catch (IOException e) {
+			throw new CantizAutomationCoreException(e.getMessage());
+		} finally{
 			if(null != emailFolder && emailFolder.isOpen()){
 				try {
 					emailFolder.close(false);
 				} catch (MessagingException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -109,18 +113,10 @@ public class MailReader {
 				try {
 					store.close();
 				} catch (MessagingException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		}
-		return result;
-	}
-
-
-	public String getMailId() {
-		String mailId = propReader.getMailUserName();
-		return mailId;
 	}
 
 }

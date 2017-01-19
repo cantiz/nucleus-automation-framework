@@ -7,11 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import java.util.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 public class PropertyReader {
     private static PropertyReader propertyReader = null;
     private String browser;
@@ -20,6 +15,11 @@ public class PropertyReader {
     private String driverType;
     private String remoteUrl;
     private String operatingSystem;
+    private String mailType;
+    private String mailHost;
+    private String mailPort;
+    private String mailUserName;
+    private String mailPassword;
     
     public String getMailType() {
 		return mailType;
@@ -60,12 +60,6 @@ public class PropertyReader {
 	public void setMailPassword(String mailPassword) {
 		this.mailPassword = mailPassword;
 	}
-
-	private String mailType;
-    private String mailHost;
-    private String mailPort;
-    private String mailUserName;
-    private String mailPassword;
     
     public String getBrowser() {
         return browser;
@@ -74,7 +68,6 @@ public class PropertyReader {
     public String getUrl() {
         return url;
     }
-
 
     public String getOs() {
         return os;
@@ -98,7 +91,8 @@ public class PropertyReader {
 
     private PropertyReader() {
         Properties prop = initializeProperties();
-        setLoginCredentials(prop);
+        setEnvironmentProperties(prop);
+        setMailerSettings(prop);
     }
 
     public static PropertyReader getInstance() {
@@ -130,13 +124,22 @@ public class PropertyReader {
 
     }// end of initializeProperties fn
 
-    private void setLoginCredentials(Properties prop) {
-        browser = (!StringUtils.isEmpty(System.getProperty("target-browser")))? System.getProperty("target-browser"):prop.getProperty("target-browser");
-        url = (!StringUtils.isEmpty(System.getProperty("target-url")))? System.getProperty("target-url"):prop.getProperty("target-url");
-        driverType = (!StringUtils.isEmpty(System.getProperty("web-driver-type")))? System.getProperty("web-driver-type"):prop.getProperty("web-driver-type");
-        remoteUrl = (!StringUtils.isEmpty(System.getProperty("web-driver-url")))? System.getProperty("web-driver-url"):prop.getProperty("web-driver-url");
-        String osFromProperty =  (prop.getProperty("target-os") != null)? prop.getProperty("target-os") : getOperatingSystem();
-        os = (!StringUtils.isEmpty(System.getProperty("target-os")))? System.getProperty("target-os"):osFromProperty;
+    private void setEnvironmentProperties(Properties prop) {
+        browser = (!StringUtils.isEmpty(System.getProperty("target-browser")))?
+                System.getProperty("target-browser"):prop.getProperty("target-browser");
+        url = (!StringUtils.isEmpty(System.getProperty("target-url")))?
+                System.getProperty("target-url"):prop.getProperty("target-url");
+        driverType = (!StringUtils.isEmpty(System.getProperty("web-driver-type")))?
+                System.getProperty("web-driver-type"):prop.getProperty("web-driver-type");
+        remoteUrl = (!StringUtils.isEmpty(System.getProperty("web-driver-url")))?
+                System.getProperty("web-driver-url"):prop.getProperty("web-driver-url");
+        String osFromProperty =  (prop.getProperty("target-os") != null)?
+                prop.getProperty("target-os") : getOperatingSystem();
+        os = (!StringUtils.isEmpty(System.getProperty("target-os")))?
+                System.getProperty("target-os"):osFromProperty;
+    }
+
+    private void setMailerSettings(Properties prop){
 
     }
 
