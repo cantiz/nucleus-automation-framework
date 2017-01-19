@@ -21,5 +21,7 @@ public interface ICantizWebDriver {
 
 	void navigateToPage(String pageURL);
 
+	String getHtmlValueById(String htmlContent, String locator);
+
 	
 }
