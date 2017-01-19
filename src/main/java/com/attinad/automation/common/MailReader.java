@@ -19,8 +19,6 @@ import org.jsoup.Jsoup;
  */
 public class MailReader {
 
-	private PropertyReader propReader = null;
-
 	public static String getMailContent(String host, String port, String storeType, String user, String password) {
 		String result = "";
 		Store store = null;
