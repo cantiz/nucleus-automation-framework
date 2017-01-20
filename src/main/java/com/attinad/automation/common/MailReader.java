@@ -17,14 +17,37 @@ import org.jsoup.Jsoup;
 
 /**
  * Created by anandxp (anand.xavier@attinadsoftware.com) on 17/01/17.
+ * This utility class can be used to read mails from various mail servers. The class
+ * supports imap, pop3 and smtp mail servers. Configuration for the mail servers can be provided
+ * to this class via method signatures or using property files.
  */
 public class MailReader {
 
+	public static String getMailContent() throws CantizAutomationCoreException {
+		PropertyReader propertyReader = PropertyReader.getInstance();
+		if(null == propertyReader.getMailUserName())
+			throw new CantizAutomationCoreException(Constants.MAIL_USER_NAME_PROPERTY+" ");
+		return getMailContent(propertyReader.getMailUserName(),propertyReader.getMailPassword());
+	}
+
 	public static String getMailContent(String user,String password) throws CantizAutomationCoreException {
 		PropertyReader propertyReader = PropertyReader.getInstance();
+		if(null == propertyReader.getMailHost())
+			throw new CantizAutomationCoreException(Constants.MAIL_HOST_PROPERTY+" should be defined in application configuration file");
 		return getMailContent(propertyReader.getMailHost(),propertyReader.getMailPort(),propertyReader.getMailType(),user,password);
 	}
 
+	/**
+	 * This method should be called if mail settings needs to be passed directly to automation core.
+	 *
+	 * @param host
+	 * @param port
+	 * @param storeType
+	 * @param user
+	 * @param password
+	 * @return
+	 * @throws CantizAutomationCoreException
+	 */
 	public static String getMailContent(String host, String port, String storeType, String user, String password) throws CantizAutomationCoreException {
 		String result = "";
 		Store store = null;
