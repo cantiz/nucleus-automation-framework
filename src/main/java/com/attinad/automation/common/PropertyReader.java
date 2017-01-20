@@ -15,20 +15,20 @@ public class PropertyReader {
     private String driverType;
     private String remoteUrl;
     private String operatingSystem;
-    private String mailType;
-    private String mailHost;
+    private String mailStoreType;
+	private String mailHost;
     private String mailPort;
     private String mailUserName;
     private String mailPassword;
     
-    public String getMailType() {
-		return mailType;
+    public String getMailStoreType() {
+		return mailStoreType;
 	}
 
-	public void setMailType(String mailType) {
-		this.mailType = mailType;
+	public void setMailStoreType(String mailStoreType) {
+		this.mailStoreType = mailStoreType;
 	}
-
+	
 	public String getMailHost() {
 		return mailHost;
 	}
@@ -126,20 +126,30 @@ public class PropertyReader {
 
     private void setEnvironmentProperties(Properties prop) {
         browser = (!StringUtils.isEmpty(System.getProperty("target-browser")))?
-                System.getProperty("target-browser"):prop.getProperty("target-browser");
+                System.getProperty("target-browser"):prop.getProperty(Constants.TARGET_BROWSER_PROPERTY);
         url = (!StringUtils.isEmpty(System.getProperty("target-url")))?
-                System.getProperty("target-url"):prop.getProperty("target-url");
+                System.getProperty("target-url"):prop.getProperty(Constants.TARGET_URL_PROPERTY);
         driverType = (!StringUtils.isEmpty(System.getProperty("web-driver-type")))?
-                System.getProperty("web-driver-type"):prop.getProperty("web-driver-type");
+                System.getProperty("web-driver-type"):prop.getProperty(Constants.WEB_DRIVER_TYPE_PROPERTY);
         remoteUrl = (!StringUtils.isEmpty(System.getProperty("web-driver-url")))?
-                System.getProperty("web-driver-url"):prop.getProperty("web-driver-url");
-        String osFromProperty =  (prop.getProperty("target-os") != null)?
-                prop.getProperty("target-os") : getOperatingSystem();
+                System.getProperty("web-driver-url"):prop.getProperty(Constants.WEB_DRIVER_URL_PROPERTY);
+        String osFromProperty =  (prop.getProperty(Constants.TARGET_OS_PROPERTY) != null)?
+                prop.getProperty(Constants.TARGET_OS_PROPERTY) : getOperatingSystem();
         os = (!StringUtils.isEmpty(System.getProperty("target-os")))?
                 System.getProperty("target-os"):osFromProperty;
     }
 
     private void setMailerSettings(Properties prop){
+    	mailType = (!StringUtils.isEmpty(System.getProperty("store-type")))?
+                System.getProperty("store-type"):prop.getProperty(Constants.MAIL_STORE_TYPE_PROPERTY);
+        mailHost = (!StringUtils.isEmpty(System.getProperty("host")))?
+                System.getProperty("host"):prop.getProperty(Constants.MAIL_HOST_PROPERTY);
+        mailPort = (!StringUtils.isEmpty(System.getProperty("port")))?
+                System.getProperty("port"):prop.getProperty(Constants.MAIL_PORT_PROPERTY);
+        mailUserName = (!StringUtils.isEmpty(System.getProperty("username")))?
+                System.getProperty("username"):prop.getProperty(Constants.MAIL_USERNAME_PROPERTY);
+        mailPassword = (!StringUtils.isEmpty(System.getProperty("password")))?
+                System.getProperty("password"):prop.getProperty(Constants.MAIL_PASSWORD_PROPERTY);
 
     }
 

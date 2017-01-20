@@ -26,7 +26,15 @@ public class MailReader {
 	public static String getMailContent() throws CantizAutomationCoreException {
 		PropertyReader propertyReader = PropertyReader.getInstance();
 		if(null == propertyReader.getMailUserName())
-			throw new CantizAutomationCoreException(Constants.MAIL_USER_NAME_PROPERTY+" ");
+			throw new CantizAutomationCoreException(Constants.MAIL_USERNAME_PROPERTY+" should be defined in application configuration file");
+		if(null == propertyReader.getMailPassword())
+			throw new CantizAutomationCoreException(Constants.MAIL_PASSWORD_PROPERTY+" should be defined in application configuration file");
+		if(null == propertyReader.getMailStoreType())
+			throw new CantizAutomationCoreException(Constants.MAIL_STORE_TYPE_PROPERTY+" should be defined in application configuration file");
+		if(null == propertyReader.getMailHost())
+			throw new CantizAutomationCoreException(Constants.MAIL_HOST_PROPERTY+" should be defined in application configuration file");
+		if(null == propertyReader.getMailPort())
+			throw new CantizAutomationCoreException(Constants.MAIL_PORT_PROPERTY+" should be defined in application configuration file");
 		return getMailContent(propertyReader.getMailUserName(),propertyReader.getMailPassword());
 	}
 
@@ -34,7 +42,11 @@ public class MailReader {
 		PropertyReader propertyReader = PropertyReader.getInstance();
 		if(null == propertyReader.getMailHost())
 			throw new CantizAutomationCoreException(Constants.MAIL_HOST_PROPERTY+" should be defined in application configuration file");
-		return getMailContent(propertyReader.getMailHost(),propertyReader.getMailPort(),propertyReader.getMailType(),user,password);
+		if(null == propertyReader.getMailStoreType())
+			throw new CantizAutomationCoreException(Constants.MAIL_STORE_TYPE_PROPERTY+" should be defined in application configuration file");
+		if(null == propertyReader.getMailPort())
+			throw new CantizAutomationCoreException(Constants.MAIL_PORT_PROPERTY+" should be defined in application configuration file");
+		return getMailContent(propertyReader.getMailHost(),propertyReader.getMailPort(),propertyReader.getMailStoreType(),user,password);
 	}
 
 	/**
