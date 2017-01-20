@@ -140,16 +140,11 @@ public class PropertyReader {
     }
 
     private void setMailerSettings(Properties prop){
-    	mailType = (!StringUtils.isEmpty(System.getProperty("store-type")))?
-                System.getProperty("store-type"):prop.getProperty(Constants.MAIL_STORE_TYPE_PROPERTY);
-        mailHost = (!StringUtils.isEmpty(System.getProperty("host")))?
-                System.getProperty("host"):prop.getProperty(Constants.MAIL_HOST_PROPERTY);
-        mailPort = (!StringUtils.isEmpty(System.getProperty("port")))?
-                System.getProperty("port"):prop.getProperty(Constants.MAIL_PORT_PROPERTY);
-        mailUserName = (!StringUtils.isEmpty(System.getProperty("username")))?
-                System.getProperty("username"):prop.getProperty(Constants.MAIL_USERNAME_PROPERTY);
-        mailPassword = (!StringUtils.isEmpty(System.getProperty("password")))?
-                System.getProperty("password"):prop.getProperty(Constants.MAIL_PASSWORD_PROPERTY);
+    	mailStoreType = prop.getProperty(Constants.MAIL_STORE_TYPE_PROPERTY);
+        mailHost = prop.getProperty(Constants.MAIL_HOST_PROPERTY);
+        mailPort = prop.getProperty(Constants.MAIL_PORT_PROPERTY);
+        mailUserName = prop.getProperty(Constants.MAIL_USERNAME_PROPERTY);
+        mailPassword = prop.getProperty(Constants.MAIL_PASSWORD_PROPERTY);
 
     }
 
