@@ -12,7 +12,7 @@ public interface ICantizWebDriver {
 
 	void clearElement(Locators locator, String locatorValue);
 
-	Boolean checkValueInsideText(String valueToCheck, String divCategory);
+	Boolean checkValueInsideWebElement(String valueToCheck, String elementId , String elementType);
 
 	Boolean checkElementById(String locatorValue);
 	void closeDriver();

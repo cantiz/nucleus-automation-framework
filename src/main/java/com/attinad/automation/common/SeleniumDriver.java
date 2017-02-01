@@ -172,11 +172,16 @@ public class SeleniumDriver implements ICantizWebDriver {
 	}
 
 	@Override
-	public Boolean checkValueInsideText(String valueToCheck, String elementId) {
-		WebElement divElement = null;
-		String wholeText;
-		divElement = driver.findElement(By.id(elementId));
-		wholeText = divElement.getText();
+	public Boolean checkValueInsideWebElement(String valueToCheck, String elementId , String elementType) {
+		WebElement webElement = null;
+		String wholeText = "";
+		webElement = driver.findElement(By.id(elementId));
+		if(elementType.equalsIgnoreCase(Constants.DIVELEMENT) || elementType.equalsIgnoreCase(Constants.SPANELEMENT)){
+			wholeText = webElement.getText();
+		}
+		else if(elementType.equalsIgnoreCase(Constants.TEXTBOX)){
+			wholeText = webElement.getAttribute("value");
+		}
 		if (wholeText.contains(valueToCheck)) {
 			return true;
 		} else {
