@@ -232,4 +232,11 @@ public class SeleniumDriver implements ICantizWebDriver {
 		return verificationcode;
 	}
 
+	@Override
+	public String getCookieValueByName(String cookieName) {
+		String cookieValue = "";
+		cookieValue = driver.manage().getCookieNamed(cookieName).getValue();
+		return cookieValue;
+	}
+
 }
