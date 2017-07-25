@@ -39,8 +39,8 @@ public class SeleniumDriver implements ICantizWebDriver {
 	}
 
 	public void initializeDriver() {
+		String osName = System.getProperty("os.name");
 		if (this.propReader.getBrowser().equalsIgnoreCase("Chrome")) {
-			String osName = System.getProperty("os.name");
 			if (osName.startsWith("Windows")) {
 				System.setProperty("webdriver.chrome.driver", "./drivers/chrome/chromedriver.exe");
 			} else {
@@ -48,7 +48,6 @@ public class SeleniumDriver implements ICantizWebDriver {
 			}
 			driver = new ChromeDriver();
 		} else if (this.propReader.getBrowser().equalsIgnoreCase("ie")) {
-			String osName = System.getProperty("os.name");
 			if (osName.startsWith("Windows")) {
 				System.setProperty("webdriver.ie.driver", "./drivers/internetexplorer/32bit/IEDriverServer.exe");
 			} else {
@@ -56,6 +55,11 @@ public class SeleniumDriver implements ICantizWebDriver {
 			}
 			driver = new InternetExplorerDriver();
 		} else if (this.propReader.getBrowser().equalsIgnoreCase("firefox")) {
+			if (osName.startsWith("Windows")) {
+				System.setProperty("webdriver.ie.driver", "./drivers/firefox/32bit/geckodriver.exe");
+			} else {
+				System.setProperty("webdriver.ie.driver", "./drivers/firefox/geckodriver");
+			}
 			driver = new FirefoxDriver();
 		} else if (this.propReader.getBrowser().equalsIgnoreCase("safari")) {
 			driver = new SafariDriver();
@@ -97,7 +101,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 			break;
 
 		case CLASS_NAME:
-			element = driver.findElement(By.id(locatorValue));
+			element = driver.findElement(By.className(locatorValue));
 			break;
 
 		case CSS_SELECTOR:
@@ -132,8 +136,29 @@ public class SeleniumDriver implements ICantizWebDriver {
 
 	@Override
 	public void sendKeyStrokes(Locators locator, String locatorValue, String keyStrokes) {
+		
 		findElement(locator, locatorValue).sendKeys(keyStrokes);
-
+	}
+	
+	
+	@Override
+	public void sendSpecialKey(Locators locator, String locatorValue, String specialKey) {
+		switch(specialKey) {
+		case "ENTER":
+			if ( System.getProperty("os.name").startsWith("Mac"))
+				findElement(locator, locatorValue).sendKeys(Keys.RETURN);
+			else
+				findElement(locator, locatorValue).sendKeys(Keys.ENTER);
+			break;
+			
+		case "TAB":
+			findElement(locator, locatorValue).sendKeys(Keys.TAB);
+			break;
+			
+		default:
+			break;
+		}
+		
 	}
 
 	@Override
@@ -146,7 +171,6 @@ public class SeleniumDriver implements ICantizWebDriver {
 
 		WebElement selectElemet = findElement(locator, locatorValue);
 		Select selectElement = new Select(selectElemet);
-		// selectElement.selectByValue(valueToSelect);
 		selectElement.selectByVisibleText(valueToSelect);
 
 	}
@@ -170,12 +194,15 @@ public class SeleniumDriver implements ICantizWebDriver {
 		findElement(locator, locatorValue).clear();
 
 	}
-
+	
 	@Override
-	public Boolean checkValueInsideWebElement(String valueToCheck, String elementId , String elementType) {
+	public Boolean checkValueInsideWebElement(String valueToCheck, Locators locator, String locatorValue,
+			String elementType) {
+		
 		WebElement webElement = null;
 		String wholeText = "";
-		webElement = driver.findElement(By.id(elementId));
+		webElement = findElement(locator, locatorValue); 
+		
 		if(elementType.equalsIgnoreCase(Constants.DIVELEMENT) || elementType.equalsIgnoreCase(Constants.SPANELEMENT)){
 			wholeText = webElement.getText();
 		}
@@ -219,7 +246,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 
 	@Override
 	public void navigateToPage(String pageURL) {
-
+		
 		driver.get(pageURL);
 	}
 
@@ -238,5 +265,13 @@ public class SeleniumDriver implements ICantizWebDriver {
 		cookieValue = driver.manage().getCookieNamed(cookieName).getValue();
 		return cookieValue;
 	}
+	
+	@Override
+	public Boolean isElementSelected(Locators locator, String locatorValue) {
+		return findElement(locator, locatorValue).isSelected();
+	}
+	
+	
+	
 
 }
