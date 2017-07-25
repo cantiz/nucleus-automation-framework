@@ -3,6 +3,8 @@ package com.attinad.automation.common;
 public interface ICantizWebDriver {
 
 	void sendKeyStrokes(Locators locator, String locatorValue, String keyStrokes);
+	
+	void sendSpecialKey(Locators locator, String locatorValue, String specialKey);
 
 	void clickElement(Locators locator, String locatorValue);
 
@@ -12,8 +14,8 @@ public interface ICantizWebDriver {
 
 	void clearElement(Locators locator, String locatorValue);
 
-	Boolean checkValueInsideWebElement(String valueToCheck, String elementId , String elementType);
-
+	Boolean checkValueInsideWebElement(String valueToCheck, Locators locator , String locatorValue, String elementType);
+	
 	Boolean checkElementById(String locatorValue);
 	void closeDriver();
 
@@ -24,5 +26,6 @@ public interface ICantizWebDriver {
 	String getHtmlValueById(String htmlContent, String locator);
 	
 	String getCookieValueByName(String cookieName);
-
+	
+	Boolean isElementSelected(Locators locator, String locatorValue);
 }
