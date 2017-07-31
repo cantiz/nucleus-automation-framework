@@ -17,6 +17,13 @@ public interface ICantizWebDriver {
 	Boolean checkValueInsideWebElement(String valueToCheck, Locators locator , String locatorValue, String elementType);
 	
 	Boolean checkElementById(String locatorValue);
+	
+	Boolean checkElementByXpath(String xpathValue);
+	
+	Boolean checkIfElementDisappearedById(String locatorValue);
+	
+	Boolean isElementPresentById(String locatorValue);
+	
 	void closeDriver();
 
 	String getAttributeTypeOfWebElement(Locators id, String idPassword);
@@ -28,4 +35,11 @@ public interface ICantizWebDriver {
 	String getCookieValueByName(String cookieName);
 	
 	Boolean isElementSelected(Locators locator, String locatorValue);
+	
+	Boolean isElementEnabled(Locators locator, String locatorValue);
+	
+	void scrollPageUp(String numberOfPixels);
+	
+	void scrollPageDown(String numberOfPixels);
+	
 }
