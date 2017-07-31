@@ -163,7 +163,10 @@ public class SeleniumDriver implements ICantizWebDriver {
 
 	@Override
 	public void clickElement(Locators locator, String locatorValue) {
-		findElement(locator, locatorValue).click();
+		
+		WebElement element = findElement(locator, locatorValue);
+		Actions actions = new Actions(driver);
+		actions.moveToElement(element).click(element).perform();
 	}
 
 	@Override
@@ -230,9 +233,29 @@ public class SeleniumDriver implements ICantizWebDriver {
 
 	@Override
 	public Boolean checkElementById(String locatorValue) {
-		WebDriverWait wait = new WebDriverWait(driver, 10);
+		WebDriverWait wait = new WebDriverWait(driver, 40);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(locatorValue)));
 		Boolean exists = driver.findElement(By.id(locatorValue)).isDisplayed();
+		return exists;
+	}
+	
+	@Override
+	public Boolean isElementPresentById(String locatorValue) {
+		WebDriverWait wait = new WebDriverWait(driver, 40);
+		try {
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.id(locatorValue)));
+			return true;
+		}
+		catch (TimeoutException e) {
+			return false;
+		}
+	}
+	
+	@Override
+	public Boolean checkElementByXpath(String xpathValue) {
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpathValue)));
+		Boolean exists = driver.findElement(By.xpath(xpathValue)).isDisplayed();
 		return exists;
 	}
 
@@ -272,6 +295,32 @@ public class SeleniumDriver implements ICantizWebDriver {
 	}
 	
 	
+	@Override
+	public Boolean isElementEnabled(Locators locator, String locatorValue) {
+		return findElement(locator, locatorValue).isEnabled();
+	}
+	
+	@Override
+	public void scrollPageDown(String numberOfPixels) {
+		JavascriptExecutor jse = (JavascriptExecutor)driver;
+		jse.executeScript("window.scrollBy(0,"+numberOfPixels+")", "");
+		
+	}
+	
+	@Override
+	public void scrollPageUp(String numberOfPixels) {
+		JavascriptExecutor jse = (JavascriptExecutor)driver;
+		jse.executeScript("window.scrollBy(0,-"+numberOfPixels+")", "");
+		
+	}
+	
+	@Override
+	public Boolean checkIfElementDisappearedById(String locatorValue) {
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(locatorValue)));
+		Boolean disappeared = !driver.findElement(By.id(locatorValue)).isDisplayed();
+		return disappeared;
+	}
 	
 
 }
