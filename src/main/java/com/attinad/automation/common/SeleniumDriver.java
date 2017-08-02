@@ -162,8 +162,11 @@ public class SeleniumDriver implements ICantizWebDriver {
 	}
 
 	@Override
-	public void clickElement(Locators locator, String locatorValue) {
-		
+	public void clickElement(Locators locator, String locatorValue){
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+		}
 		WebElement element = findElement(locator, locatorValue);
 		Actions actions = new Actions(driver);
 		actions.moveToElement(element).click(element).perform();
@@ -205,7 +208,6 @@ public class SeleniumDriver implements ICantizWebDriver {
 		WebElement webElement = null;
 		String wholeText = "";
 		webElement = findElement(locator, locatorValue); 
-		
 		if(elementType.equalsIgnoreCase(Constants.DIVELEMENT) || elementType.equalsIgnoreCase(Constants.SPANELEMENT)){
 			wholeText = webElement.getText();
 		}
@@ -233,7 +235,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 
 	@Override
 	public Boolean checkElementById(String locatorValue) {
-		WebDriverWait wait = new WebDriverWait(driver, 40);
+		WebDriverWait wait = new WebDriverWait(driver, 10);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(locatorValue)));
 		Boolean exists = driver.findElement(By.id(locatorValue)).isDisplayed();
 		return exists;
