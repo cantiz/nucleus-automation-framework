@@ -154,7 +154,13 @@ public class SeleniumDriver implements ICantizWebDriver {
 		case "TAB":
 			findElement(locator, locatorValue).sendKeys(Keys.TAB);
 			break;
+		
+		case "BACKSPACE":
+			findElement(locator, locatorValue).sendKeys(Keys.BACK_SPACE);
+			break;
 			
+		case "DELETE" :
+			findElement(locator, locatorValue).sendKeys(Keys.DELETE);
 		default:
 			break;
 		}
@@ -163,10 +169,6 @@ public class SeleniumDriver implements ICantizWebDriver {
 
 	@Override
 	public void clickElement(Locators locator, String locatorValue){
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-		}
 		WebElement element = findElement(locator, locatorValue);
 		Actions actions = new Actions(driver);
 		actions.moveToElement(element).click(element).perform();
@@ -204,7 +206,6 @@ public class SeleniumDriver implements ICantizWebDriver {
 	@Override
 	public Boolean checkValueInsideWebElement(String valueToCheck, Locators locator, String locatorValue,
 			String elementType) {
-		
 		WebElement webElement = null;
 		String wholeText = "";
 		webElement = findElement(locator, locatorValue); 
@@ -252,7 +253,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 			return false;
 		}
 	}
-	
+
 	@Override
 	public Boolean checkElementByXpath(String xpathValue) {
 		WebDriverWait wait = new WebDriverWait(driver, 10);
