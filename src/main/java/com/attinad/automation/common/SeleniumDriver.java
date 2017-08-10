@@ -173,7 +173,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 		Actions actions = new Actions(driver);
 		actions.moveToElement(element).click(element).perform();
 	}
-
+	
 	@Override
 	public void selectValue(Locators locator, String locatorValue, String valueToSelect) {
 
@@ -215,7 +215,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 		else if(elementType.equalsIgnoreCase(Constants.TEXTBOX)){
 			wholeText = webElement.getAttribute("value");
 		}
-		if (wholeText.contains(valueToCheck)) {
+		if (wholeText.equals(valueToCheck)) {
 			return true;
 		} else {
 			return false;
