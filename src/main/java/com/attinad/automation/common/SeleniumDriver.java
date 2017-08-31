@@ -170,8 +170,9 @@ public class SeleniumDriver implements ICantizWebDriver {
 	@Override
 	public void clickElement(Locators locator, String locatorValue){
 		WebElement element = findElement(locator, locatorValue);
-		Actions actions = new Actions(driver);
-		actions.moveToElement(element).click(element).perform();
+		JavascriptExecutor executor = (JavascriptExecutor) driver;
+		executor.executeScript("arguments[0].click();", element);
+		
 	}
 	
 	@Override
@@ -206,7 +207,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 	@Override
 	public Boolean checkValueInsideWebElement(String valueToCheck, Locators locator, String locatorValue,
 			String elementType) {
-		WebElement webElement = null;
+		WebElement webElement = null; 
 		String wholeText = "";
 		webElement = findElement(locator, locatorValue); 
 		if(elementType.equalsIgnoreCase(Constants.DIVELEMENT) || elementType.equalsIgnoreCase(Constants.SPANELEMENT)){
@@ -215,11 +216,27 @@ public class SeleniumDriver implements ICantizWebDriver {
 		else if(elementType.equalsIgnoreCase(Constants.TEXTBOX)){
 			wholeText = webElement.getAttribute("value");
 		}
-		if (wholeText.equals(valueToCheck)) {
+		if (wholeText.contains(valueToCheck)) {
 			return true;
 		} else {
 			return false;
 		}
+	}
+	
+
+	@Override
+	public Boolean isElementEmpty(Locators locator, String locatorValue, String elementType) {
+		WebElement webElement = null;
+		webElement = findElement(locator, locatorValue); 
+		if(elementType.equalsIgnoreCase(Constants.DIVELEMENT) || elementType.equalsIgnoreCase(Constants.SPANELEMENT)){
+			if (webElement.getText().equals(""))
+				return true;
+		}
+		else if(elementType.equalsIgnoreCase(Constants.TEXTBOX)){
+			if (webElement.getAttribute("value").equals(""))
+				return true;
+		}
+		return false;
 	}
 
 	/*
@@ -236,14 +253,23 @@ public class SeleniumDriver implements ICantizWebDriver {
 
 	@Override
 	public Boolean checkElementById(String locatorValue) {
+		if (this.propReader.getBrowser().equalsIgnoreCase("safari"))
+			return isElementPresentById(locatorValue);
+			
+			
 		WebDriverWait wait = new WebDriverWait(driver, 10);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(locatorValue)));
+		try {
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(locatorValue)));
+		} catch (TimeoutException e) {
+			return false;
+		}
+		
 		Boolean exists = driver.findElement(By.id(locatorValue)).isDisplayed();
 		return exists;
 	}
 	
 	@Override
-	public Boolean isElementPresentById(String locatorValue) {
+	public Boolean isElementPresentById(String locatorValue){
 		WebDriverWait wait = new WebDriverWait(driver, 40);
 		try {
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.id(locatorValue)));
@@ -257,11 +283,23 @@ public class SeleniumDriver implements ICantizWebDriver {
 	@Override
 	public Boolean checkElementByXpath(String xpathValue) {
 		WebDriverWait wait = new WebDriverWait(driver, 10);
+		try {
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpathValue)));
+		} catch (TimeoutException e) {
+			return false;
+		}
 		Boolean exists = driver.findElement(By.xpath(xpathValue)).isDisplayed();
 		return exists;
 	}
-
+	
+	@Override
+	public Boolean checkElementByCss(String cssValue) {
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(cssValue)));
+		Boolean exists = driver.findElement(By.cssSelector(cssValue)).isDisplayed();
+		return exists; 
+	} 
+	
 	@Override
 	public String getAttributeTypeOfWebElement(Locators id, String locatorvalue) {
 		String attributeType = "";
@@ -281,15 +319,14 @@ public class SeleniumDriver implements ICantizWebDriver {
 
 		Document doc = Jsoup.parse(htmlContent);
 		String verificationcode = doc.getElementById(locator).html();
-
-		return verificationcode;
+		return verificationcode; 
 	}
 
 	@Override
 	public String getCookieValueByName(String cookieName) {
 		String cookieValue = "";
 		cookieValue = driver.manage().getCookieNamed(cookieName).getValue();
-		return cookieValue;
+		return cookieValue; 
 	}
 	
 	@Override
@@ -325,5 +362,16 @@ public class SeleniumDriver implements ICantizWebDriver {
 		return disappeared;
 	}
 	
-
+	@Override
+	public Boolean checkIfElementDisappearedByClass(String locatorValue) {
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.className(locatorValue)));
+		Boolean disappeared = !driver.findElement(By.className(locatorValue)).isDisplayed();
+		return disappeared;
+	}
+	
+	@Override
+	public void refreshPage() {
+		driver.navigate().refresh();
+	}
 }

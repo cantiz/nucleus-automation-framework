@@ -5,9 +5,9 @@ public interface ICantizWebDriver {
 	void sendKeyStrokes(Locators locator, String locatorValue, String keyStrokes);
 	
 	void sendSpecialKey(Locators locator, String locatorValue, String specialKey);
-
+	
 	void clickElement(Locators locator, String locatorValue);
-
+	
 	void selectValue(Locators locator, String locatorValue, String valueToSelect);
 
 	void selectMenuElement(String menuFirstLevelId, String menuSecondLevelId);
@@ -16,11 +16,17 @@ public interface ICantizWebDriver {
 
 	Boolean checkValueInsideWebElement(String valueToCheck, Locators locator , String locatorValue, String elementType);
 	
+	Boolean isElementEmpty(Locators locator, String locatorValue, String elementType);
+	
 	Boolean checkElementById(String locatorValue);
 	
 	Boolean checkElementByXpath(String xpathValue);
 	
+	Boolean checkElementByCss(String cssValue);
+	
 	Boolean checkIfElementDisappearedById(String locatorValue);
+	
+	Boolean checkIfElementDisappearedByClass(String locatorValue);
 	
 	Boolean isElementPresentById(String locatorValue);
 	
@@ -41,5 +47,7 @@ public interface ICantizWebDriver {
 	void scrollPageUp(String numberOfPixels);
 	
 	void scrollPageDown(String numberOfPixels);
+	
+	void refreshPage();
 	
 }
