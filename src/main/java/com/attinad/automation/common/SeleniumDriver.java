@@ -33,7 +33,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 		} else {
 			initializeDriver();
 		}
-		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+//		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 		driver.get(this.propReader.getUrl());
 		driver.manage().window().maximize();
 	}
@@ -93,88 +93,93 @@ public class SeleniumDriver implements ICantizWebDriver {
 		}
 	}
 
-	private WebElement findElement(Locators locator, String locatorValue) {
-		WebElement element = null;
+	private By getLocator(Locators locator, String locatorValue) {
+		
+		By byObject = null;
 		switch (locator) {
 		case XPATH:
-			element = driver.findElement(By.xpath(locatorValue));
+			byObject = By.xpath(locatorValue);
 			break;
 
 		case CLASS_NAME:
-			element = driver.findElement(By.className(locatorValue));
+			byObject = By.className(locatorValue);
 			break;
 
 		case CSS_SELECTOR:
-			element = driver.findElement(By.cssSelector(locatorValue));
+			byObject = By.cssSelector(locatorValue);
 			break;
 
 		case LINK_TEXT:
-			element = driver.findElement(By.linkText(locatorValue));
+			byObject = By.linkText(locatorValue);
 			break;
 
 		case NAME:
-			element = driver.findElement(By.name(locatorValue));
+			byObject = By.name(locatorValue);
 			break;
 
 		case PARTIAL_LINK_TEXT:
-			element = driver.findElement(By.partialLinkText(locatorValue));
+			byObject = By.partialLinkText(locatorValue);
 			break;
 
 		case TAG_NAME:
-			element = driver.findElement(By.tagName(locatorValue));
+			byObject = By.tagName(locatorValue);
 			break;
 
 		case ID:
-			element = driver.findElement(By.id(locatorValue));
+			byObject = By.id(locatorValue);
 			break;
 
 		default:
 			break;
 		}
-		return element;
+		return byObject;
+	}
+	
+	private WebElement findElement(Locators locator, String locatorValue) {
+		return driver.findElement(getLocator(locator, locatorValue));
+		
 	}
 
 	@Override
 	public void sendKeyStrokes(Locators locator, String locatorValue, String keyStrokes) {
-		
+
 		findElement(locator, locatorValue).sendKeys(keyStrokes);
 	}
-	
-	
+
 	@Override
 	public void sendSpecialKey(Locators locator, String locatorValue, String specialKey) {
-		switch(specialKey) {
+		switch (specialKey) {
 		case "ENTER":
-			if ( System.getProperty("os.name").startsWith("Mac"))
+			if (System.getProperty("os.name").startsWith("Mac"))
 				findElement(locator, locatorValue).sendKeys(Keys.RETURN);
 			else
 				findElement(locator, locatorValue).sendKeys(Keys.ENTER);
 			break;
-			
+
 		case "TAB":
 			findElement(locator, locatorValue).sendKeys(Keys.TAB);
 			break;
-		
+
 		case "BACKSPACE":
 			findElement(locator, locatorValue).sendKeys(Keys.BACK_SPACE);
 			break;
-			
-		case "DELETE" :
+
+		case "DELETE":
 			findElement(locator, locatorValue).sendKeys(Keys.DELETE);
 		default:
 			break;
 		}
-		
+
 	}
 
 	@Override
-	public void clickElement(Locators locator, String locatorValue){
+	public void clickElement(Locators locator, String locatorValue) {
 		WebElement element = findElement(locator, locatorValue);
 		JavascriptExecutor executor = (JavascriptExecutor) driver;
 		executor.executeScript("arguments[0].click();", element);
-		
+
 	}
-	
+
 	@Override
 	public void selectValue(Locators locator, String locatorValue, String valueToSelect) {
 
@@ -183,7 +188,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 		selectElement.selectByVisibleText(valueToSelect);
 
 	}
-
+	
 	@Override
 	public void selectMenuElement(String menuFirstLevelId, String menuSecondLevelId) {
 		this.clickElement(Locators.ID, "menuButton");
@@ -203,17 +208,16 @@ public class SeleniumDriver implements ICantizWebDriver {
 		findElement(locator, locatorValue).clear();
 
 	}
-	
+
 	@Override
 	public Boolean checkValueInsideWebElement(String valueToCheck, Locators locator, String locatorValue,
 			String elementType) {
-		WebElement webElement = null; 
+		WebElement webElement = null;
 		String wholeText = "";
-		webElement = findElement(locator, locatorValue); 
-		if(elementType.equalsIgnoreCase(Constants.DIVELEMENT) || elementType.equalsIgnoreCase(Constants.SPANELEMENT)){
+		webElement = findElement(locator, locatorValue);
+		if (elementType.equalsIgnoreCase(Constants.DIVELEMENT) || elementType.equalsIgnoreCase(Constants.SPANELEMENT)) {
 			wholeText = webElement.getText();
-		}
-		else if(elementType.equalsIgnoreCase(Constants.TEXTBOX)){
+		} else if (elementType.equalsIgnoreCase(Constants.TEXTBOX)) {
 			wholeText = webElement.getAttribute("value");
 		}
 		if (wholeText.contains(valueToCheck)) {
@@ -222,17 +226,15 @@ public class SeleniumDriver implements ICantizWebDriver {
 			return false;
 		}
 	}
-	
 
 	@Override
 	public Boolean isElementEmpty(Locators locator, String locatorValue, String elementType) {
 		WebElement webElement = null;
-		webElement = findElement(locator, locatorValue); 
-		if(elementType.equalsIgnoreCase(Constants.DIVELEMENT) || elementType.equalsIgnoreCase(Constants.SPANELEMENT)){
+		webElement = findElement(locator, locatorValue);
+		if (elementType.equalsIgnoreCase(Constants.DIVELEMENT) || elementType.equalsIgnoreCase(Constants.SPANELEMENT)) {
 			if (webElement.getText().equals(""))
 				return true;
-		}
-		else if(elementType.equalsIgnoreCase(Constants.TEXTBOX)){
+		} else if (elementType.equalsIgnoreCase(Constants.TEXTBOX)) {
 			if (webElement.getAttribute("value").equals(""))
 				return true;
 		}
@@ -250,56 +252,36 @@ public class SeleniumDriver implements ICantizWebDriver {
 		driver.quit();
 
 	}
-
+	
 	@Override
-	public Boolean checkElementById(String locatorValue) {
+	public Boolean isElementVisible(Locators locator, String locatorValue) {
 		if (this.propReader.getBrowser().equalsIgnoreCase("safari"))
-			return isElementPresentById(locatorValue);
-			
-			
+			return isElementPresent(locator, locatorValue);
+
 		WebDriverWait wait = new WebDriverWait(driver, 10);
 		try {
-			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(locatorValue)));
+			wait.until(ExpectedConditions.visibilityOfElementLocated(getLocator(locator, locatorValue)));
 		} catch (TimeoutException e) {
 			return false;
 		}
-		
-		Boolean exists = driver.findElement(By.id(locatorValue)).isDisplayed();
+
+		Boolean exists = driver.findElement(getLocator(locator, locatorValue)).isDisplayed();
 		return exists;
 	}
 	
+
 	@Override
-	public Boolean isElementPresentById(String locatorValue){
+	public Boolean isElementPresent(Locators locator, String locatorValue) {
 		WebDriverWait wait = new WebDriverWait(driver, 40);
 		try {
-			wait.until(ExpectedConditions.presenceOfElementLocated(By.id(locatorValue)));
+			wait.until(ExpectedConditions.presenceOfElementLocated(getLocator(locator, locatorValue)));
 			return true;
-		}
-		catch (TimeoutException e) {
+		} catch (TimeoutException e) {
 			return false;
 		}
 	}
 
-	@Override
-	public Boolean checkElementByXpath(String xpathValue) {
-		WebDriverWait wait = new WebDriverWait(driver, 10);
-		try {
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpathValue)));
-		} catch (TimeoutException e) {
-			return false;
-		}
-		Boolean exists = driver.findElement(By.xpath(xpathValue)).isDisplayed();
-		return exists;
-	}
-	
-	@Override
-	public Boolean checkElementByCss(String cssValue) {
-		WebDriverWait wait = new WebDriverWait(driver, 10);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(cssValue)));
-		Boolean exists = driver.findElement(By.cssSelector(cssValue)).isDisplayed();
-		return exists; 
-	} 
-	
+
 	@Override
 	public String getAttributeTypeOfWebElement(Locators id, String locatorvalue) {
 		String attributeType = "";
@@ -310,7 +292,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 
 	@Override
 	public void navigateToPage(String pageURL) {
-		
+
 		driver.get(pageURL);
 	}
 
@@ -319,59 +301,52 @@ public class SeleniumDriver implements ICantizWebDriver {
 
 		Document doc = Jsoup.parse(htmlContent);
 		String verificationcode = doc.getElementById(locator).html();
-		return verificationcode; 
+		return verificationcode;
 	}
 
 	@Override
 	public String getCookieValueByName(String cookieName) {
 		String cookieValue = "";
 		cookieValue = driver.manage().getCookieNamed(cookieName).getValue();
-		return cookieValue; 
+		return cookieValue;
 	}
-	
+
 	@Override
 	public Boolean isElementSelected(Locators locator, String locatorValue) {
 		return findElement(locator, locatorValue).isSelected();
 	}
-	
-	
+
 	@Override
 	public Boolean isElementEnabled(Locators locator, String locatorValue) {
 		return findElement(locator, locatorValue).isEnabled();
 	}
-	
+
 	@Override
 	public void scrollPageDown(String numberOfPixels) {
-		JavascriptExecutor jse = (JavascriptExecutor)driver;
-		jse.executeScript("window.scrollBy(0,"+numberOfPixels+")", "");
-		
+		JavascriptExecutor jse = (JavascriptExecutor) driver;
+		jse.executeScript("window.scrollBy(0," + numberOfPixels + ")", "");
+
 	}
-	
+
 	@Override
 	public void scrollPageUp(String numberOfPixels) {
-		JavascriptExecutor jse = (JavascriptExecutor)driver;
-		jse.executeScript("window.scrollBy(0,-"+numberOfPixels+")", "");
-		
+		JavascriptExecutor jse = (JavascriptExecutor) driver;
+		jse.executeScript("window.scrollBy(0,-" + numberOfPixels + ")", "");
+
 	}
-	
+
 	@Override
-	public Boolean checkIfElementDisappearedById(String locatorValue) {
+	public Boolean checkIfElementDisappeared(Locators locator, String locatorValue) {
 		WebDriverWait wait = new WebDriverWait(driver, 10);
-		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(locatorValue)));
-		Boolean disappeared = !driver.findElement(By.id(locatorValue)).isDisplayed();
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(getLocator(locator, locatorValue)));
+		Boolean disappeared = !driver.findElement(getLocator(locator, locatorValue)).isDisplayed();
 		return disappeared;
 	}
-	
-	@Override
-	public Boolean checkIfElementDisappearedByClass(String locatorValue) {
-		WebDriverWait wait = new WebDriverWait(driver, 10);
-		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.className(locatorValue)));
-		Boolean disappeared = !driver.findElement(By.className(locatorValue)).isDisplayed();
-		return disappeared;
-	}
-	
+
 	@Override
 	public void refreshPage() {
 		driver.navigate().refresh();
 	}
+
+	
 }
