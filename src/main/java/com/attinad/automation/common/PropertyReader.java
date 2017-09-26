@@ -2,6 +2,7 @@ package com.attinad.automation.common;
 
 import org.apache.commons.lang3.StringUtils;
 
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -144,7 +145,7 @@ public class PropertyReader {
         mailHost = prop.getProperty(Constants.MAIL_HOST_PROPERTY);
         mailPort = prop.getProperty(Constants.MAIL_PORT_PROPERTY);
         mailUserName = prop.getProperty(Constants.MAIL_USERNAME_PROPERTY);
-        mailPassword = prop.getProperty(Constants.MAIL_PASSWORD_PROPERTY);
+        mailPassword = prop.getProperty(Constants.MAIL_PSWD_PROPERTY);
 
     }
 

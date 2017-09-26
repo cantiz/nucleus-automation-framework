@@ -28,7 +28,7 @@ public class MailReader {
 		if(null == propertyReader.getMailUserName())
 			throw new CantizAutomationCoreException(Constants.MAIL_USERNAME_PROPERTY+" should be defined in application configuration file");
 		if(null == propertyReader.getMailPassword())
-			throw new CantizAutomationCoreException(Constants.MAIL_PASSWORD_PROPERTY+" should be defined in application configuration file");
+			throw new CantizAutomationCoreException(Constants.MAIL_PSWD_PROPERTY+" should be defined in application configuration file");
 		if(null == propertyReader.getMailStoreType())
 			throw new CantizAutomationCoreException(Constants.MAIL_STORE_TYPE_PROPERTY+" should be defined in application configuration file");
 		if(null == propertyReader.getMailHost())
@@ -94,7 +94,7 @@ public class MailReader {
 				store = emailSession.getStore("imaps");
 				store.connect(host, user, password);
 			}
-
+ 
 			emailFolder = store.getFolder("INBOX");
 			emailFolder.open(Folder.HOLDS_MESSAGES);
 

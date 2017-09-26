@@ -14,7 +14,7 @@ public class Constants {
     public static final String MAIL_PORT_PROPERTY = "cantiz.automation.mailer.port";
     public static final String MAIL_STORE_TYPE_PROPERTY = "cantiz.automation.mailer.store-type";
     public static final String MAIL_USERNAME_PROPERTY = "cantiz.automation.mailer.username";
-    public static final String MAIL_PASSWORD_PROPERTY = "cantiz.automation.mailer.password";
+    public static final String MAIL_PSWD_PROPERTY = "cantiz.automation.mailer.password";
     
     public static final String TEXTBOX = "textbox";
     public static final String DIVELEMENT = "divelement";

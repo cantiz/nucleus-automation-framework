@@ -40,6 +40,8 @@ public interface ICantizWebDriver {
 	
 	void refreshPage();
 	
+	void navigateBack();
+	
 	Boolean isElementVisible(Locators locator, String locatorValue);
 	
 	Boolean isElementPresent(Locators locator, String locatorValue);

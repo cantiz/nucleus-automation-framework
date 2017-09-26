@@ -19,7 +19,6 @@ import com.attinad.automation.common.Locators;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.concurrent.TimeUnit;
 
 public class SeleniumDriver implements ICantizWebDriver {
 
@@ -28,40 +27,46 @@ public class SeleniumDriver implements ICantizWebDriver {
 
 	public SeleniumDriver(PropertyReader propReader) throws CantizAutomationCoreException {
 		this.propReader = propReader;
-		if (propReader.getDriverType().equalsIgnoreCase("remote")) {
+		if ("remote".equalsIgnoreCase(propReader.getDriverType())) {
 			initializeRemoteDriver();
 		} else {
 			initializeDriver();
 		}
-//		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+		/* Implicit wait doesn't work in Safari browser
+		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS); */
 		driver.get(this.propReader.getUrl());
 		driver.manage().window().maximize();
 	}
 
 	public void initializeDriver() {
 		String osName = System.getProperty("os.name");
-		if (this.propReader.getBrowser().equalsIgnoreCase("Chrome")) {
-			if (osName.startsWith("Windows")) {
-				System.setProperty("webdriver.chrome.driver", "./drivers/chrome/chromedriver.exe");
+		String osWindows = "Windows";
+		String chromeDriver = "webdriver.chrome.driver";
+		String ieDriver = "webdriver.ie.driver";
+		String safariDriver = "webdriver.gecko.driver";
+		
+		if ("Chrome".equalsIgnoreCase(this.propReader.getBrowser())) {
+			if (osName.startsWith(osWindows)) {
+				System.setProperty(chromeDriver, "./drivers/chrome/chromedriver.exe");
 			} else {
-				System.setProperty("webdriver.chrome.driver", "./drivers/chrome/chromedriver");
+				System.setProperty(chromeDriver, "./drivers/chrome/chromedriver");
 			}
 			driver = new ChromeDriver();
-		} else if (this.propReader.getBrowser().equalsIgnoreCase("ie")) {
-			if (osName.startsWith("Windows")) {
-				System.setProperty("webdriver.ie.driver", "./drivers/internetexplorer/32bit/IEDriverServer.exe");
+		} else if ("ie".equalsIgnoreCase(this.propReader.getBrowser())) {
+			if (osName.startsWith(osWindows)) {
+				System.setProperty(ieDriver, "./drivers/internetexplorer/32bit/IEDriverServer.exe");
 			} else {
-				System.setProperty("webdriver.ie.driver", "./drivers/internetexplorer/IEDriverServer.exe");
+				System.setProperty(ieDriver, "./drivers/internetexplorer/IEDriverServer.exe");
 			}
 			driver = new InternetExplorerDriver();
-		} else if (this.propReader.getBrowser().equalsIgnoreCase("firefox")) {
-			if (osName.startsWith("Windows")) {
-				System.setProperty("webdriver.ie.driver", "./drivers/firefox/32bit/geckodriver.exe");
+		} else if ("firefox".equalsIgnoreCase(this.propReader.getBrowser())) {
+			if (osName.startsWith(osWindows)) {
+				System.setProperty(safariDriver, "./drivers/firefox/32bit/geckodriver.exe");
 			} else {
-				System.setProperty("webdriver.ie.driver", "./drivers/firefox/geckodriver");
+				System.setProperty(safariDriver, "./drivers/firefox/geckodriver");
 			}
 			driver = new FirefoxDriver();
-		} else if (this.propReader.getBrowser().equalsIgnoreCase("safari")) {
+		} else if ("safari".equalsIgnoreCase(this.propReader.getBrowser())) {
 			driver = new SafariDriver();
 		}
 	}
@@ -142,7 +147,6 @@ public class SeleniumDriver implements ICantizWebDriver {
 
 	@Override
 	public void sendKeyStrokes(Locators locator, String locatorValue, String keyStrokes) {
-
 		findElement(locator, locatorValue).sendKeys(keyStrokes);
 	}
 
@@ -166,6 +170,8 @@ public class SeleniumDriver implements ICantizWebDriver {
 
 		case "DELETE":
 			findElement(locator, locatorValue).sendKeys(Keys.DELETE);
+			break;
+			
 		default:
 			break;
 		}
@@ -212,31 +218,27 @@ public class SeleniumDriver implements ICantizWebDriver {
 	@Override
 	public Boolean checkValueInsideWebElement(String valueToCheck, Locators locator, String locatorValue,
 			String elementType) {
-		WebElement webElement = null;
+		
 		String wholeText = "";
-		webElement = findElement(locator, locatorValue);
+		isElementPresent(locator, locatorValue);
+		WebElement webElement = findElement(locator, locatorValue);
+		
 		if (elementType.equalsIgnoreCase(Constants.DIVELEMENT) || elementType.equalsIgnoreCase(Constants.SPANELEMENT)) {
 			wholeText = webElement.getText();
 		} else if (elementType.equalsIgnoreCase(Constants.TEXTBOX)) {
 			wholeText = webElement.getAttribute("value");
 		}
-		if (wholeText.contains(valueToCheck)) {
-			return true;
-		} else {
-			return false;
-		}
+		return wholeText.contains(valueToCheck);
 	}
 
 	@Override
 	public Boolean isElementEmpty(Locators locator, String locatorValue, String elementType) {
-		WebElement webElement = null;
-		webElement = findElement(locator, locatorValue);
+		 WebElement webElement = findElement(locator, locatorValue);
 		if (elementType.equalsIgnoreCase(Constants.DIVELEMENT) || elementType.equalsIgnoreCase(Constants.SPANELEMENT)) {
-			if (webElement.getText().equals(""))
-				return true;
+			return "".equals(webElement.getText());
+			
 		} else if (elementType.equalsIgnoreCase(Constants.TEXTBOX)) {
-			if (webElement.getAttribute("value").equals(""))
-				return true;
+			return "".equals(webElement.getAttribute("value"));
 		}
 		return false;
 	}
@@ -255,18 +257,18 @@ public class SeleniumDriver implements ICantizWebDriver {
 	
 	@Override
 	public Boolean isElementVisible(Locators locator, String locatorValue) {
-		if (this.propReader.getBrowser().equalsIgnoreCase("safari"))
+		if ("safari".equalsIgnoreCase(this.propReader.getBrowser()))
 			return isElementPresent(locator, locatorValue);
 
 		WebDriverWait wait = new WebDriverWait(driver, 10);
 		try {
 			wait.until(ExpectedConditions.visibilityOfElementLocated(getLocator(locator, locatorValue)));
 		} catch (TimeoutException e) {
+			e.printStackTrace();
 			return false;
 		}
 
-		Boolean exists = driver.findElement(getLocator(locator, locatorValue)).isDisplayed();
-		return exists;
+		return driver.findElement(getLocator(locator, locatorValue)).isDisplayed();
 	}
 	
 
@@ -277,6 +279,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 			wait.until(ExpectedConditions.presenceOfElementLocated(getLocator(locator, locatorValue)));
 			return true;
 		} catch (TimeoutException e) {
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -284,10 +287,8 @@ public class SeleniumDriver implements ICantizWebDriver {
 
 	@Override
 	public String getAttributeTypeOfWebElement(Locators id, String locatorvalue) {
-		String attributeType = "";
 		WebElement element = findElement(id, locatorvalue);
-		attributeType = element.getAttribute("type");
-		return attributeType;
+		return element.getAttribute("type");
 	}
 
 	@Override
@@ -300,14 +301,12 @@ public class SeleniumDriver implements ICantizWebDriver {
 	public String getHtmlValueById(String htmlContent, String locator) {
 
 		Document doc = Jsoup.parse(htmlContent);
-		String verificationcode = doc.getElementById(locator).html();
-		return verificationcode;
+		return doc.getElementById(locator).html();
 	}
 
 	@Override
 	public String getCookieValueByName(String cookieName) {
-		String cookieValue = "";
-		cookieValue = driver.manage().getCookieNamed(cookieName).getValue();
+		String cookieValue = driver.manage().getCookieNamed(cookieName).getValue();
 		return cookieValue;
 	}
 
@@ -339,8 +338,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 	public Boolean checkIfElementDisappeared(Locators locator, String locatorValue) {
 		WebDriverWait wait = new WebDriverWait(driver, 10);
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(getLocator(locator, locatorValue)));
-		Boolean disappeared = !driver.findElement(getLocator(locator, locatorValue)).isDisplayed();
-		return disappeared;
+		return !driver.findElement(getLocator(locator, locatorValue)).isDisplayed();
 	}
 
 	@Override
@@ -348,5 +346,8 @@ public class SeleniumDriver implements ICantizWebDriver {
 		driver.navigate().refresh();
 	}
 
-	
+	@Override
+	public void navigateBack() {
+		driver.navigate().back();
+	}
 }
