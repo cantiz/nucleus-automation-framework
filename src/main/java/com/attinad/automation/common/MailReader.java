@@ -73,7 +73,7 @@ public class MailReader {
 	public static String getMailContent(String host, String port, String storeType, String user, String password)
 			throws CantizAutomationCoreException {
 		String result = "";
-		Store store = null;
+		Store store;
 		Folder emailFolder = null;
 		try {
 
