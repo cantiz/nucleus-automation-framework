@@ -73,7 +73,7 @@ public class MailReader {
 	public static String getMailContent(String host, String port, String storeType, String user, String password)
 			throws CantizAutomationCoreException {
 		String result = "";
-		Store store;
+		Store store = null;
 		Folder emailFolder = null;
 		try {
 
@@ -105,13 +105,11 @@ public class MailReader {
 				store = emailSession.getStore("imaps");
 				store.connect(host, user, password);
 			}
-			try {
+			
+			if (null != store)
 				emailFolder = store.getFolder("INBOX");
-			} catch (NullPointerException e) {
-				e.printStackTrace();
+			else 
 				return result;
-			}
-
 			emailFolder.open(Folder.HOLDS_MESSAGES);
 
 			// retrieve the messages from the folder in an array and print it
