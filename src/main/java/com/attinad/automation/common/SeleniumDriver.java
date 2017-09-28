@@ -19,12 +19,14 @@ import com.attinad.automation.common.Locators;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SeleniumDriver implements ICantizWebDriver {
 
 	private PropertyReader propReader = null;
 	private WebDriver driver = null;
-
+	Logger logger = Logger.getAnonymousLogger();
 	public SeleniumDriver(PropertyReader propReader) throws CantizAutomationCoreException {
 		this.propReader = propReader;
 		if ("remote".equalsIgnoreCase(propReader.getDriverType())) {
@@ -264,7 +266,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 		try {
 			wait.until(ExpectedConditions.visibilityOfElementLocated(getLocator(locator, locatorValue)));
 		} catch (TimeoutException e) {
-			e.printStackTrace();
+			logger.log(Level.INFO, "Element Not Visible", e);
 			return false;
 		}
 
@@ -279,7 +281,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 			wait.until(ExpectedConditions.presenceOfElementLocated(getLocator(locator, locatorValue)));
 			return true;
 		} catch (TimeoutException e) {
-			e.printStackTrace();
+			logger.log(Level.INFO, "Element Not Present", e);
 			return false;
 		}
 	}
