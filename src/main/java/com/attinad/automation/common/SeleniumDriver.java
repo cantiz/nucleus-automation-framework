@@ -23,7 +23,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SeleniumDriver implements ICantizWebDriver {
-
 	private PropertyReader propReader = null;
 	private WebDriver driver = null;
 	Logger logger = Logger.getAnonymousLogger();
@@ -43,15 +42,19 @@ public class SeleniumDriver implements ICantizWebDriver {
 	public void initializeDriver() {
 		String osName = System.getProperty("os.name");
 		String osWindows = "Windows";
+		String osLinux = "Linux";
 		String chromeDriver = "webdriver.chrome.driver";
 		String ieDriver = "webdriver.ie.driver";
 		String safariDriver = "webdriver.gecko.driver";
 		
 		if ("Chrome".equalsIgnoreCase(this.propReader.getBrowser())) {
 			if (osName.startsWith(osWindows)) {
-				System.setProperty(chromeDriver, "./drivers/chrome/chromedriver.exe");
-			} else {
-				System.setProperty(chromeDriver, "./drivers/chrome/chromedriver");
+				System.setProperty(chromeDriver, "./drivers/chrome/Windows/chromedriver.exe");
+			} else if(osName.startsWith(osLinux)){
+				System.setProperty(chromeDriver, "./drivers/chrome/Linux/chromedriver");
+			}
+			else {
+				System.setProperty(chromeDriver, "./drivers/chrome/Mac/chromedriver");
 			}
 			driver = new ChromeDriver();
 		} else if ("ie".equalsIgnoreCase(this.propReader.getBrowser())) {
@@ -63,9 +66,12 @@ public class SeleniumDriver implements ICantizWebDriver {
 			driver = new InternetExplorerDriver();
 		} else if ("firefox".equalsIgnoreCase(this.propReader.getBrowser())) {
 			if (osName.startsWith(osWindows)) {
-				System.setProperty(safariDriver, "./drivers/firefox/32bit/geckodriver.exe");
-			} else {
-				System.setProperty(safariDriver, "./drivers/firefox/geckodriver");
+				System.setProperty(safariDriver, "./drivers/firefox/32bitWindows/geckodriver.exe");
+			} else if(osName.startsWith(osLinux)) {
+				System.setProperty(safariDriver, "./drivers/firefox/Linux/geckodriver");
+			}
+			else {
+				System.setProperty(safariDriver, "./drivers/firefox/Mac/geckodriver");
 			}
 			driver = new FirefoxDriver();
 		} else if ("safari".equalsIgnoreCase(this.propReader.getBrowser())) {
@@ -228,9 +234,11 @@ public class SeleniumDriver implements ICantizWebDriver {
 		if (elementType.equalsIgnoreCase(Constants.DIVELEMENT) || elementType.equalsIgnoreCase(Constants.SPANELEMENT)) {
 			wholeText = webElement.getText();
 		} else if (elementType.equalsIgnoreCase(Constants.TEXTBOX)) {
+		
 			wholeText = webElement.getAttribute("value");
 		}
-		return wholeText.contains(valueToCheck);
+		
+		return wholeText.equals(valueToCheck);
 	}
 
 	@Override
