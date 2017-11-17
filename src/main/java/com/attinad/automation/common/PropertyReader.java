@@ -144,9 +144,10 @@ public class PropertyReader {
     	mailStoreType = prop.getProperty(Constants.MAIL_STORE_TYPE_PROPERTY);
         mailHost = prop.getProperty(Constants.MAIL_HOST_PROPERTY);
         mailPort = prop.getProperty(Constants.MAIL_PORT_PROPERTY);
-        mailUserName = prop.getProperty(Constants.MAIL_USERNAME_PROPERTY);
-        mailPassword = prop.getProperty(Constants.MAIL_PSWD_PROPERTY);
-
+        mailUserName =  (!StringUtils.isEmpty(System.getProperty("mail-username")))?
+                System.getProperty("mail-username"):prop.getProperty(Constants.MAIL_USERNAME_PROPERTY);
+        mailPassword = (!StringUtils.isEmpty(System.getProperty("mail-password")))?
+                System.getProperty("mail-password"):prop.getProperty(Constants.MAIL_PSWD_PROPERTY);
     }
 
     private String getOperatingSystem() {
