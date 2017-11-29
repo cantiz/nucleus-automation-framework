@@ -196,10 +196,14 @@ public class SeleniumDriver implements ICantizWebDriver {
 
 	@Override
 	public void selectValue(Locators locator, String locatorValue, String valueToSelect) {
-
+		
 		WebElement selectElemet = findElement(locator, locatorValue);
-		Select selectElement = new Select(selectElemet);
-		selectElement.selectByVisibleText(valueToSelect);
+		if (System.getProperty("os.name").startsWith("Linux"))
+			selectElemet.sendKeys(valueToSelect);
+		else {
+			Select selectElement = new Select(selectElemet);
+			selectElement.selectByVisibleText(valueToSelect);
+		}
 
 	}
 	
@@ -269,7 +273,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 	public Boolean isElementVisible(Locators locator, String locatorValue) {
 		if ("safari".equalsIgnoreCase(this.propReader.getBrowser()))
 			return isElementPresent(locator, locatorValue);
-
+		
 		WebDriverWait wait = new WebDriverWait(driver, 10);
 		try {
 			wait.until(ExpectedConditions.visibilityOfElementLocated(getLocator(locator, locatorValue)));
