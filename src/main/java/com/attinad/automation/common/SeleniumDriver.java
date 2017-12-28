@@ -26,6 +26,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 	private PropertyReader propReader = null;
 	private WebDriver driver = null;
 	Logger logger = Logger.getAnonymousLogger();
+	
 	public SeleniumDriver(PropertyReader propReader) throws CantizAutomationCoreException {
 		this.propReader = propReader;
 		if ("remote".equalsIgnoreCase(propReader.getDriverType())) {
@@ -363,5 +364,17 @@ public class SeleniumDriver implements ICantizWebDriver {
 	@Override
 	public void navigateBack() {
 		driver.navigate().back();
+	}
+
+	
+
+	@Override
+	public String getTextInWebElement(Locators locator, String locatorValue) {
+		String text = null;
+		
+		WebElement webElement = findElement(locator, locatorValue);
+		text = webElement.getText();
+		
+		return text;
 	}
 }

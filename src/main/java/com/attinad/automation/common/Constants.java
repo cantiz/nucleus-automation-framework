@@ -9,6 +9,7 @@ public class Constants {
     public static final String WEB_DRIVER_TYPE_PROPERTY = "cantiz.automation.environment.web-driver-type";
     public static final String WEB_DRIVER_URL_PROPERTY = "cantiz.automation.environment.web-driver-url";
     public static final String TARGET_URL_PROPERTY = "cantiz.automation.environment.target-url";
+    public static final String TARGET_ELECTRONURL_PROPERTY = "cantiz.automation.environment.target-electronurl";
 
     public static final String MAIL_HOST_PROPERTY = "cantiz.automation.mailer.host";
     public static final String MAIL_PORT_PROPERTY = "cantiz.automation.mailer.port";

@@ -47,4 +47,5 @@ public interface ICantizWebDriver {
 	Boolean isElementPresent(Locators locator, String locatorValue);
 	
 	
+	String getTextInWebElement(Locators locator,String locatorValue);
 }

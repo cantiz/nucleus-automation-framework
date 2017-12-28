@@ -12,6 +12,7 @@ public class PropertyReader {
     private static PropertyReader propertyReader = null;
     private String browser;
     private String url;
+	private String electronurl;
     private String os;
     private String driverType;
     private String remoteUrl;
@@ -89,6 +90,13 @@ public class PropertyReader {
     public void setRemoteUrl(String remoteUrl) {
         this.remoteUrl = remoteUrl;
     }
+    public String getElectronurl() {
+		return electronurl;
+	}
+
+	public void setElectronurl(String electronurl) {
+		this.electronurl = electronurl;
+	}
 
     private PropertyReader() {
         Properties prop = initializeProperties();
@@ -130,6 +138,8 @@ public class PropertyReader {
                 System.getProperty("target-browser"):prop.getProperty(Constants.TARGET_BROWSER_PROPERTY);
         url = (!StringUtils.isEmpty(System.getProperty("target-url")))?
                 System.getProperty("target-url"):prop.getProperty(Constants.TARGET_URL_PROPERTY);
+        electronurl = (!StringUtils.isEmpty(System.getProperty("target-url")))?
+                        System.getProperty("target-electronurl"):prop.getProperty(Constants.TARGET_ELECTRONURL_PROPERTY);             
         driverType = (!StringUtils.isEmpty(System.getProperty("web-driver-type")))?
                 System.getProperty("web-driver-type"):prop.getProperty(Constants.WEB_DRIVER_TYPE_PROPERTY);
         remoteUrl = (!StringUtils.isEmpty(System.getProperty("web-driver-url")))?
@@ -139,6 +149,8 @@ public class PropertyReader {
         os = (!StringUtils.isEmpty(System.getProperty("target-os")))?
                 System.getProperty("target-os"):osFromProperty;
     }
+    
+    
 
     private void setMailerSettings(Properties prop){
     	mailStoreType = prop.getProperty(Constants.MAIL_STORE_TYPE_PROPERTY);
