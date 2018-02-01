@@ -22,8 +22,17 @@ public class PropertyReader {
     private String mailPort;
     private String mailUserName;
     private String mailPassword;
+    private String token;
     
-    public String getMailStoreType() {
+    public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public String getMailStoreType() {
 		return mailStoreType;
 	}
 
@@ -138,8 +147,16 @@ public class PropertyReader {
                 System.getProperty("target-browser"):prop.getProperty(Constants.TARGET_BROWSER_PROPERTY);
         url = (!StringUtils.isEmpty(System.getProperty("target-url")))?
                 System.getProperty("target-url"):prop.getProperty(Constants.TARGET_URL_PROPERTY);
-        electronurl = (!StringUtils.isEmpty(System.getProperty("target-url")))?
-                        System.getProperty("target-electronurl"):prop.getProperty(Constants.TARGET_ELECTRONURL_PROPERTY);             
+        electronurl = (!StringUtils.isEmpty(System.getProperty("target-electronurl")))?
+                        System.getProperty("target-electronurl"):prop.getProperty(Constants.TARGET_ELECTRONURL_PROPERTY); 
+        
+
+
+         token = (!StringUtils.isEmpty(System.getProperty("token")))?
+                                System.getProperty("token"):prop.getProperty(Constants.ELECTRON_TOKEN_PROPERTY);                        
+                                
+                                
+                                
         driverType = (!StringUtils.isEmpty(System.getProperty("web-driver-type")))?
                 System.getProperty("web-driver-type"):prop.getProperty(Constants.WEB_DRIVER_TYPE_PROPERTY);
         remoteUrl = (!StringUtils.isEmpty(System.getProperty("web-driver-url")))?

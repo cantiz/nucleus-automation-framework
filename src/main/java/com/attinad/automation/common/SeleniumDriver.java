@@ -149,7 +149,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 		return byObject;
 	}
 	
-	private WebElement findElement(Locators locator, String locatorValue) {
+	public WebElement findElement(Locators locator, String locatorValue) {
 		return driver.findElement(getLocator(locator, locatorValue));
 		
 	}
