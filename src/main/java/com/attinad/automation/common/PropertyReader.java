@@ -23,8 +23,17 @@ public class PropertyReader {
     private String mailUserName;
     private String mailPassword;
     private String token;
+    private String superUserToken;
     
-    public String getToken() {
+    public String getSuperUserToken() {
+		return superUserToken;
+	}
+
+	public void setSuperUserToken(String superUserToken) {
+		this.superUserToken = superUserToken;
+	}
+
+	public String getToken() {
 		return token;
 	}
 
@@ -155,7 +164,8 @@ public class PropertyReader {
          token = (!StringUtils.isEmpty(System.getProperty("token")))?
                                 System.getProperty("token"):prop.getProperty(Constants.ELECTRON_TOKEN_PROPERTY);                        
                                 
-                                
+         superUserToken= (!StringUtils.isEmpty(System.getProperty("superUserToken")))?
+                 System.getProperty("superUserToken"):prop.getProperty(Constants.SUPERUSER_TOKEN_PROPERTY);                     
                                 
         driverType = (!StringUtils.isEmpty(System.getProperty("web-driver-type")))?
                 System.getProperty("web-driver-type"):prop.getProperty(Constants.WEB_DRIVER_TYPE_PROPERTY);
