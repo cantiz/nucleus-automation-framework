@@ -164,7 +164,7 @@ public class PropertyReader {
          token = (!StringUtils.isEmpty(System.getProperty("token")))?
                                 System.getProperty("token"):prop.getProperty(Constants.ELECTRON_TOKEN_PROPERTY);                        
                                 
-         superUserToken= (!StringUtils.isEmpty(System.getProperty("superUserToken")))?
+        superUserToken= (!StringUtils.isEmpty(System.getProperty("superUserToken")))?
                  System.getProperty("superUserToken"):prop.getProperty(Constants.SUPERUSER_TOKEN_PROPERTY);                     
                                 
         driverType = (!StringUtils.isEmpty(System.getProperty("web-driver-type")))?
