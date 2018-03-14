@@ -46,7 +46,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 		String osLinux = "Linux";
 		String chromeDriver = "webdriver.chrome.driver";
 		String ieDriver = "webdriver.ie.driver";
-		String safariDriver = "webdriver.gecko.driver";
+		String firefoxDriver = "webdriver.gecko.driver";
 		
 		if ("Chrome".equalsIgnoreCase(this.propReader.getBrowser())) {
 			if (osName.startsWith(osWindows)) {
@@ -67,12 +67,12 @@ public class SeleniumDriver implements ICantizWebDriver {
 			driver = new InternetExplorerDriver();
 		} else if ("firefox".equalsIgnoreCase(this.propReader.getBrowser())) {
 			if (osName.startsWith(osWindows)) {
-				System.setProperty(safariDriver, "./drivers/firefox/32bitWindows/geckodriver.exe");
+				System.setProperty(firefoxDriver, "./drivers/firefox/32bitWindows/geckodriver.exe");
 			} else if(osName.startsWith(osLinux)) {
-				System.setProperty(safariDriver, "./drivers/firefox/Linux/geckodriver");
+				System.setProperty(firefoxDriver, "./drivers/firefox/Linux/geckodriver");
 			}
 			else {
-				System.setProperty(safariDriver, "./drivers/firefox/Mac/geckodriver");
+				System.setProperty(firefoxDriver, "./drivers/firefox/Mac/geckodriver");
 			}
 			driver = new FirefoxDriver();
 		} else if ("safari".equalsIgnoreCase(this.propReader.getBrowser())) {
