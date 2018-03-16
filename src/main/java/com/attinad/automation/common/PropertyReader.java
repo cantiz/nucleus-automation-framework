@@ -1,8 +1,6 @@
 package com.attinad.automation.common;
 
 import org.apache.commons.lang3.StringUtils;
-
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;

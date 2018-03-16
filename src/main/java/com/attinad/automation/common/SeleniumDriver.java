@@ -47,6 +47,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 		String chromeDriver = "webdriver.chrome.driver";
 		String ieDriver = "webdriver.ie.driver";
 		String firefoxDriver = "webdriver.gecko.driver";
+		DesiredCapabilities capabilities = new DesiredCapabilities();
 		
 		if ("Chrome".equalsIgnoreCase(this.propReader.getBrowser())) {
 			if (osName.startsWith(osWindows)) {
@@ -66,6 +67,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 			}
 			driver = new InternetExplorerDriver();
 		} else if ("firefox".equalsIgnoreCase(this.propReader.getBrowser())) {
+			capabilities.setCapability("marionette", true);
 			if (osName.startsWith(osWindows)) {
 				System.setProperty(firefoxDriver, "./drivers/firefox/32bitWindows/geckodriver.exe");
 			} else if(osName.startsWith(osLinux)) {
@@ -74,7 +76,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 			else {
 				System.setProperty(firefoxDriver, "./drivers/firefox/Mac/geckodriver");
 			}
-			driver = new FirefoxDriver();
+			driver = new FirefoxDriver(capabilities);
 		} else if ("safari".equalsIgnoreCase(this.propReader.getBrowser())) {
 			driver = new SafariDriver();
 		}
@@ -265,7 +267,11 @@ public class SeleniumDriver implements ICantizWebDriver {
 	@Override
 	public void closeDriver() {
 
-		driver.close();
+		/*
+		 * Removing driver.close() as it is creating
+		 * trouble in Mozilla Firefox
+		 */
+		//driver.close();
 		driver.quit();
 
 	}
