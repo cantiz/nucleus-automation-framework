@@ -85,6 +85,9 @@ public class SeleniumDriver implements ICantizWebDriver {
 	public void initializeRemoteDriver() throws CantizAutomationCoreException {
 		DesiredCapabilities capabilities = new DesiredCapabilities();
 		capabilities.setBrowserName(propReader.getBrowser());
+		if("firefox".equalsIgnoreCase(this.propReader.getBrowser())) {
+			capabilities.setCapability("marionette", true);
+		}
 		capabilities.setPlatform(resolvePlatfrom());
 		try {
 			driver = new RemoteWebDriver(new URL(propReader.getRemoteUrl()), capabilities);
