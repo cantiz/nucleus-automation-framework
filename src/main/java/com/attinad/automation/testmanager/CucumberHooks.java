@@ -13,6 +13,9 @@ import java.util.List;
 
 import org.apache.http.auth.AuthenticationException;
 import org.apache.http.client.ClientProtocolException;
+import com.attinad.automation.testmanager.PractiTest;
+import com.attinad.automation.testmanager.PractiTestConstants;
+import com.attinad.automation.testmanager.PractiTestVariables;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -48,8 +51,7 @@ public class CucumberHooks {
 	public static void afterAllScenario(Scenario scenario) throws IOException {
 		File file = new File(PractiTestConstants.TEST_RESULT_FILE);
 		FileWriter writer = new FileWriter(file, true);
-
-		writer.write(scenario.getStatus().toUpperCase() + "\n");
+		writer.write(scenario.getStatus() + "\n");
 		writer.close();
 
 	}

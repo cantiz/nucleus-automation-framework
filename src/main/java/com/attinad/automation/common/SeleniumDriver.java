@@ -9,6 +9,11 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.logging.LogEntries;
+import org.openqa.selenium.logging.LogEntry;
+import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.LoggingPreferences;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
@@ -17,8 +22,12 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import com.attinad.automation.common.Locators;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,6 +57,9 @@ public class SeleniumDriver implements ICantizWebDriver {
 		String ieDriver = "webdriver.ie.driver";
 		String firefoxDriver = "webdriver.gecko.driver";
 		DesiredCapabilities capabilities = new DesiredCapabilities();
+		LoggingPreferences logPrefs = new LoggingPreferences();
+		logPrefs.enable(LogType.BROWSER, Level.ALL);
+		capabilities.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
 		
 		if ("Chrome".equalsIgnoreCase(this.propReader.getBrowser())) {
 			if (osName.startsWith(osWindows)) {
@@ -84,7 +96,10 @@ public class SeleniumDriver implements ICantizWebDriver {
 
 	public void initializeRemoteDriver() throws CantizAutomationCoreException {
 		DesiredCapabilities capabilities = new DesiredCapabilities();
+		LoggingPreferences logPrefs = new LoggingPreferences();
+		logPrefs.enable(LogType.BROWSER, Level.ALL);
 		capabilities.setBrowserName(propReader.getBrowser());
+		capabilities.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
 		if("firefox".equalsIgnoreCase(this.propReader.getBrowser())) {
 			capabilities.setCapability("marionette", true);
 		}
@@ -95,6 +110,26 @@ public class SeleniumDriver implements ICantizWebDriver {
 			throw new CantizAutomationCoreException("Remote URL provided is invalid.");
 		}
 	}
+	
+    public void analyzeLog() {
+        LogEntries logEntries = driver.manage().logs().get(LogType.BROWSER);
+        File file = new File("browserlogs.log");
+        FileWriter fileWriter;
+		try {
+			fileWriter = new FileWriter(file);
+
+        for (LogEntry entry : logEntries) {
+        	fileWriter.write(new Date(entry.getTimestamp()) + " " + entry.getLevel() + " " + entry.getMessage());
+        	fileWriter.write(System.getProperty( "line.separator" ));
+        }
+        fileWriter.flush();
+		fileWriter.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+
 
 	public Platform resolvePlatfrom() {
 		String osName = propReader.getOs();
@@ -386,4 +421,6 @@ public class SeleniumDriver implements ICantizWebDriver {
 		
 		return text;
 	}
+	
+	
 }
