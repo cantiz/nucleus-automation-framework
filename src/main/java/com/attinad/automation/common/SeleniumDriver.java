@@ -35,7 +35,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 	private PropertyReader propReader = null;
 	private WebDriver driver = null;
 	Logger logger = Logger.getAnonymousLogger();
-	
+
 	public SeleniumDriver(PropertyReader propReader) throws CantizAutomationCoreException {
 		this.propReader = propReader;
 		if ("remote".equalsIgnoreCase(propReader.getDriverType())) {
@@ -60,7 +60,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 		LoggingPreferences logPrefs = new LoggingPreferences();
 		logPrefs.enable(LogType.BROWSER, Level.ALL);
 		capabilities.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
-		
+
 		if ("Chrome".equalsIgnoreCase(this.propReader.getBrowser())) {
 			if (osName.startsWith(osWindows)) {
 				System.setProperty(chromeDriver, "./drivers/chrome/Windows/chromedriver.exe");
@@ -110,7 +110,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 			throw new CantizAutomationCoreException("Remote URL provided is invalid.");
 		}
 	}
-	
+
     public void analyzeLog() {
         LogEntries logEntries = driver.manage().logs().get(LogType.BROWSER);
         File file = new File("browserlogs.log");
@@ -148,7 +148,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 	}
 
 	private By getLocator(Locators locator, String locatorValue) {
-		
+
 		By byObject = null;
 		switch (locator) {
 		case XPATH:
@@ -188,10 +188,10 @@ public class SeleniumDriver implements ICantizWebDriver {
 		}
 		return byObject;
 	}
-	
+
 	public WebElement findElement(Locators locator, String locatorValue) {
 		return driver.findElement(getLocator(locator, locatorValue));
-		
+
 	}
 
 	@Override
@@ -220,7 +220,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 		case "DELETE":
 			findElement(locator, locatorValue).sendKeys(Keys.DELETE);
 			break;
-			
+
 		default:
 			break;
 		}
@@ -237,7 +237,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 
 	@Override
 	public void selectValue(Locators locator, String locatorValue, String valueToSelect) {
-		
+
 		WebElement selectElemet = findElement(locator, locatorValue);
 		if (System.getProperty("os.name").startsWith("Linux"))
 			selectElemet.sendKeys(valueToSelect);
@@ -247,7 +247,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 		}
 
 	}
-	
+
 	@Override
 	public void selectMenuElement(String menuFirstLevelId, String menuSecondLevelId) {
 		this.clickElement(Locators.ID, "menuButton");
@@ -271,18 +271,18 @@ public class SeleniumDriver implements ICantizWebDriver {
 	@Override
 	public Boolean checkValueInsideWebElement(String valueToCheck, Locators locator, String locatorValue,
 			String elementType) {
-		
+
 		String wholeText = "";
 		isElementPresent(locator, locatorValue);
 		WebElement webElement = findElement(locator, locatorValue);
-		
+
 		if (elementType.equalsIgnoreCase(Constants.DIVELEMENT) || elementType.equalsIgnoreCase(Constants.SPANELEMENT)) {
 			wholeText = webElement.getText();
 		} else if (elementType.equalsIgnoreCase(Constants.TEXTBOX)) {
-		
+
 			wholeText = webElement.getAttribute("value");
 		}
-		
+
 		return wholeText.equals(valueToCheck);
 	}
 
@@ -291,7 +291,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 		 WebElement webElement = findElement(locator, locatorValue);
 		if (elementType.equalsIgnoreCase(Constants.DIVELEMENT) || elementType.equalsIgnoreCase(Constants.SPANELEMENT)) {
 			return "".equals(webElement.getText());
-			
+
 		} else if (elementType.equalsIgnoreCase(Constants.TEXTBOX)) {
 			return "".equals(webElement.getAttribute("value"));
 		}
@@ -313,12 +313,12 @@ public class SeleniumDriver implements ICantizWebDriver {
 		driver.quit();
 
 	}
-	
+
 	@Override
 	public Boolean isElementVisible(Locators locator, String locatorValue) {
 		if ("safari".equalsIgnoreCase(this.propReader.getBrowser()))
 			return isElementPresent(locator, locatorValue);
-		
+
 		WebDriverWait wait = new WebDriverWait(driver, 10);
 		try {
 			wait.until(ExpectedConditions.visibilityOfElementLocated(getLocator(locator, locatorValue)));
@@ -329,7 +329,7 @@ public class SeleniumDriver implements ICantizWebDriver {
 
 		return driver.findElement(getLocator(locator, locatorValue)).isDisplayed();
 	}
-	
+
 
 	@Override
 	public Boolean isElementPresent(Locators locator, String locatorValue) {
@@ -410,17 +410,32 @@ public class SeleniumDriver implements ICantizWebDriver {
 		driver.navigate().back();
 	}
 
-	
+
 
 	@Override
 	public String getTextInWebElement(Locators locator, String locatorValue) {
 		String text = null;
-		
+
 		WebElement webElement = findElement(locator, locatorValue);
 		text = webElement.getText();
-		
+
 		return text;
 	}
-	
-	
+
+	/**
+	 * This function is used to trigger MouseEvents in Java Script, You can give
+	 * MouseEvents like mousedown,mouseup,click etc.. for the parameter "trigger"
+	 */
+	@Override
+	public void jsTriggerMouseEvents(Locators locator, String locatorValue, String trigger) {
+
+		JavascriptExecutor jse = (JavascriptExecutor) driver;
+		WebElement webElement = findElement(locator, locatorValue);
+		String jscript = "var clickEvent = document.createEvent ('MouseEvents'); clickEvent.initEvent ('" + trigger
+				+ "', true, true);arguments[0].dispatchEvent(clickEvent);";
+		jse.executeScript(jscript, webElement);
+
+	}
+
+
 }
